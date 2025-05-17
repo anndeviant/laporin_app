@@ -1,7 +1,12 @@
-export default function App() {
+//import {BrowserRouter, Routes, Route} from "react-router-dom"
+import FormPage from "./pages/FormPage";
+
+function App() {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-  )
+    <div>
+      <FormPage/>
+    </div>
+  );
 }
+
+export default App;
