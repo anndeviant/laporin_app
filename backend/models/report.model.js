@@ -44,6 +44,14 @@ const Report = db.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    image_url: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lampiran_url: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     agency_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -55,8 +63,6 @@ const Report = db.define(
   },
   {
     timestamps: true,
-    createdAt: "created_at",
-    updatedAt: "updated_at",
   }
 );
 
