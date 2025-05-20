@@ -2,67 +2,74 @@ import InputField from "../components/InputField";
 import SelectField from "../components/SelectField";
 import TextArea from "../components/TextArea";
 import ImageUpload from "../components/ImageUpload";
-import DateTimeField from "../components/DateTimeField";
+import bgImage from '../assets/svg/Clippathgroup.svg';
+import { Megaphone } from "lucide-react";
 
 const FormPage = () => {
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="ps-2 text-3xl font-bold text-black mb-6">ADUAN LAYANAN</h1>
-      <form className="grid grid-cols-1 gap-6">
-        <InputField id="title" name="title" placeholder="Judul Aduan" />
+    <div
+      className="bg-contain bg-no-repeat min-h-screen flex flex-col items-center justify-start py-10 px-4"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundColor: "#E0F0FD",
+      }}
+    >
+      {/* Hiasan dan judul */}
+      <div className="text-center mb-6 bg-white bg-opacity-80 rounded-xl px-6 py-4 shadow">
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <Megaphone className="text-sky-500" size={32} />
+          <h2 className="text-2xl font-bold text-sky-500 tracking-wide">FORM PENGADUAN FASILITAS MASYARAKAT</h2>
+        </div>
+        <p className="text-md text-gray-700">
+          Sampaikan aduan Anda terkait fasilitas umum di lingkungan Anda secara cepat dan mudah.
+        </p>
+      </div>
 
-        <SelectField
-          id="category"
-          name="category"
-          label="Pilih Kategori Aduan"
-          options={["Music", "Sports", "Arts", "Technology"]}
-        />
+      {/* Form */}
+      <div className="container max-w-3xl bg-white bg-opacity-90 rounded-lg shadow-md p-6">
+        <h1 className="text-3xl font-bold text-black mb-6">ADUAN LAYANAN</h1>
 
-        <div className="p-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form className="grid grid-cols-1 gap-6">
+          <InputField id="title" name="title" placeholder="Judul Aduan" />
+
+          <SelectField
+            id="category"
+            name="category"
+            label="Pilih Kategori Aduan"
+            options={["Jalan Rusak", "Lampu Mati", "Saluran Tersumbat", "Lainnya"]}
+          />
+
           <TextArea id="description" name="description" placeholder="Deskripsi Aduan" />
-          <ImageUpload useFor={"Bukti Pendukung"} />
-        </div>
 
-        <InputField id="location" name="location" placeholder="Lokasi Kejadian" />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <InputField id="nama-pelapor" name="nama-pelapor" placeholder="Nama Pelapor" />
-          <InputField id="email-pelapor" name="email-pelapor" type="email" placeholder="Email Pelapor Aktif" />
-        </div>
+          <InputField id="location" name="location" placeholder="Lokasi Kejadian" />
 
-        <InputField id="alamat-pelapor" name="alamat-pelapor" placeholder="Alamat Pelapor" />
-
-        <div className="p-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <DateTimeField id="start-date" label="Start Date" />
-          <DateTimeField id="end-date" label="End Date" />
-        </div>
-
-        <div className="p-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="flex items-center bg-[#f6f6f6] rounded-md p-2">
-            <span className="flex-shrink-0 flex items-center mr-3 text-gray-500">
-              <label htmlFor="status" className="block">Status</label>
-            </span>
-            <SelectField
-              id="status"
-              name="status"
-              label="Select Status"
-              options={[
-                { value: "active", label: "Active" },
-                { value: "inactive", label: "Inactive" },
-              ]}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <InputField id="nama-pelapor" name="nama-pelapor" placeholder="Nama Pelapor" />
+            <InputField id="kontak-pelapor" name="kontak-pelapor" type="text" placeholder="Contact Pelapor Aktif" />
           </div>
-          <InputField id="tags" name="tags" placeholder="Tags (comma-separated)" />
-        </div>
 
-        <div className="col-span-full mt-6 p-2">
-          <button type="submit" className="block w-full bg-[#8c0327] hover:bg-[#6b0220] text-white font-bold py-3 px-4 rounded-full">
-            Kirim
-          </button>
-        </div>
-      </form>
+          <SelectField
+            id="laporke"
+            name="laporke"
+            label="Lapor Ke Pemerintah?"
+            options={["Pemerintah Desa", "Pemerintah Kabupaten", "Pemerintah Provinsi", "Lainnya"]}
+          />
+
+          <ImageUpload useFor="Bukti Pendukung" />
+
+          <div className="mt-6">
+            <button
+              type="submit"
+              className="w-full bg-[#38A8F4] hover:bg-sky-600 text-white font-bold py-3 px-4 rounded-full transition duration-300"
+            >
+              Kirim
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
-}
+};
 
-export default FormPage
+export default FormPage;
