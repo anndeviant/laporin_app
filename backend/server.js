@@ -11,14 +11,12 @@ dotenv.config();
 // Init Express app
 const app = express();
 const PORT = 5000;
+app.use(cors({}));
+app.use(cookieParser());
+app.use(express.json());
 
 //routes
 app.use(ReportRoute);
-
-// Middleware
-app.use(cookieParser());
-app.use(cors({}));
-app.use(express.json());
 
 // Health check route
 app.get("/", (req, res) => {
