@@ -13,10 +13,6 @@ const ReportCategory = db.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
   },
   {
     timestamps: true,
