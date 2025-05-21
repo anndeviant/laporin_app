@@ -1,6 +1,6 @@
 import ReportCategory from "../models/reportCategory.model.js";
 
-export const getReportCategorys = async(req, res)=>{
+export const getReportCategories = async(req, res)=>{
     try {
         const response = await ReportCategory.findAll();
         res.status(200).json(response);
@@ -9,7 +9,7 @@ export const getReportCategorys = async(req, res)=>{
     }
 }
 
-export const createReportCategorys = async(req, res)=>{
+export const createReportCategories = async(req, res)=>{
     try {
         await ReportCategory.create(req.body);
         res.status(201).json({msg: "ReportCategory add"});

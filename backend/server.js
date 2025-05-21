@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import ReportRoute from "./routes/ReportRoute.js";
 import CategoryRoute from "./routes/CategoryRoute.js";
+import AgencyRoute from "./routes/AgencyRoute.js";
 import dotenv from "dotenv";
 import { initializeDatabase } from "./models/db_connect.js";
 
@@ -19,6 +20,7 @@ app.use(express.json());
 //routes
 app.use(ReportRoute);
 app.use(CategoryRoute);
+app.use(AgencyRoute);
 
 // Health check route
 app.get("/", (req, res) => {
