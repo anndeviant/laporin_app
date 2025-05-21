@@ -1,6 +1,9 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import ReportRoute from "./routes/ReportRoute.js";
+import CategoryRoute from "./routes/CategoryRoute.js";
+import AgencyRoute from "./routes/AgencyRoute.js";
 import dotenv from "dotenv";
 import { initializeDatabase } from "./models/db_connect.js";
 
@@ -10,11 +13,14 @@ dotenv.config();
 // Init Express app
 const app = express();
 const PORT = 5000;
-
-// Middleware
-app.use(cookieParser());
 app.use(cors({}));
+app.use(cookieParser());
 app.use(express.json());
+
+//routes
+app.use(ReportRoute);
+app.use(CategoryRoute);
+app.use(AgencyRoute);
 
 // Health check route
 app.get("/", (req, res) => {
