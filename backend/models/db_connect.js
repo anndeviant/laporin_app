@@ -16,7 +16,7 @@ const initializeDatabase = async () => {
     setupAssociations();
 
     // Sync models with database
-    await db.sync({ force: true }); // Uncomment to drop and recreate tables
+    await db.sync({ force: false }); // Uncomment to drop and recreate tables
     // force: true will drop the table if it already exists
     // force: false will not drop the table
     // Note: Use { force: true } only in development to drop and recreate tables

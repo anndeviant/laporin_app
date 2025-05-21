@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import ReportRoute from "./routes/ReportRoute.js";
 import dotenv from "dotenv";
 import { initializeDatabase } from "./models/db_connect.js";
 
@@ -10,6 +11,9 @@ dotenv.config();
 // Init Express app
 const app = express();
 const PORT = 5000;
+
+//routes
+app.use(ReportRoute);
 
 // Middleware
 app.use(cookieParser());
