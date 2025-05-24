@@ -11,11 +11,11 @@ dotenv.config();
 
 // Init Express app
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT;
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: "",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
