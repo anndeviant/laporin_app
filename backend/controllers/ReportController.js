@@ -3,6 +3,7 @@ import ReportCategory from "../models/reportCategory.model.js";
 import ReportHistory from "../models/reportHistory.model.js";
 import GovernmentAgency from "../models/governmentAgency.model.js";
 import { Op } from "sequelize";
+import { uploadFileToGCS } from "../middleware/UploadFile.js";
 
 export const getReports = async (req, res) => {
   try {
@@ -42,10 +43,64 @@ export const getReportsById = async (req, res) => {
 
 export const createReports = async (req, res) => {
   try {
-    await Report.create(req.body);
-    res.status(201).json({ msg: "Report add" });
+    const {
+      title,
+      description,
+      category_id,
+      reporter_name,
+      reporter_contact,
+      location,
+      agency_id,
+    } = req.body;
+
+    // Check if image file is uploaded
+    if (!req.files || !req.files.image) {
+      return res.status(400).json({ msg: "Foto bukti wajib diunggah" });
+    }
+
+    let imageUrl = null;
+    let lampiranUrl = null;
+
+    // Upload image file
+    try {
+      imageUrl = await uploadFileToGCS(req.files.image[0], "images");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      return res.status(500).json({ msg: "Gagal mengunggah foto bukti" });
+    }
+
+    // Upload lampiran file if exists
+    if (req.files.lampiran && req.files.lampiran[0]) {
+      try {
+        lampiranUrl = await uploadFileToGCS(req.files.lampiran[0], "files");
+      } catch (error) {
+        console.error("Error uploading lampiran:", error);
+        return res.status(500).json({ msg: "Gagal mengunggah lampiran" });
+      }
+    }
+
+    // Create report in database
+    const newReport = await Report.create({
+      title,
+      description,
+      category_id: parseInt(category_id),
+      reporter_name,
+      reporter_contact,
+      location,
+      image_url: imageUrl,
+      lampiran_url: lampiranUrl,
+      agency_id: agency_id ? parseInt(agency_id) : null,
+      status: "pending",
+    });
+
+    res.status(201).json({
+      msg: "Aduan berhasil dikirim",
+      reportId: newReport.id,
+      trackingId: newReport.id,
+    });
   } catch (error) {
-    console.log(error.message);
+    console.error("Error creating report:", error);
+    res.status(500).json({ msg: "Terjadi kesalahan saat mengirim aduan" });
   }
 };
 
