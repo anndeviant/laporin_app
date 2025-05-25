@@ -15,7 +15,6 @@ const SelectField = ({ id,
                 style={{ backgroundColor: "#ffffff", ...style }}
                 {...rest}
             >
-                <option value="">{label}</option>
                 {options.map((opt, i) => (
                     <option key={i} value={opt.value || opt}>{opt.label || opt}</option>
                 ))}

@@ -1,7 +1,7 @@
-import InputField from "../components/InputField";
-import SelectField from "../components/SelectField";
-import TextArea from "../components/TextArea";
-import ImageUpload from "../components/ImageUpload";
+import InputField from "../components/Form/InputField";
+import SelectField from "../components/Form/SelectField";
+import TextArea from "../components/Form/TextArea";
+import ImageUpload from "../components/Form/ImageUpload";
 import bgImage from '../assets/svg/Clippathgroup.svg';
 import { Megaphone } from "lucide-react";
 
