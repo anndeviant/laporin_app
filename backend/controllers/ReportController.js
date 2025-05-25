@@ -1,14 +1,29 @@
 import Report from "../models/report.model.js";
 import ReportCategory from "../models/reportCategory.model.js";
 import ReportHistory from "../models/reportHistory.model.js";
+import GovernmentAgency from "../models/governmentAgency.model.js";
 import { Op } from "sequelize";
 
 export const getReports = async (req, res) => {
   try {
-    const response = await Report.findAll();
+    const response = await Report.findAll({
+      include: [
+        {
+          model: ReportCategory,
+          attributes: ["name"],
+        },
+        {
+          model: GovernmentAgency,
+          attributes: ["name"],
+        },
+      ],
+    });
     res.status(200).json(response);
   } catch (error) {
     console.log(error.message);
+    res
+      .status(500)
+      .json({ msg: "Terjadi kesalahan saat mengambil data aduan" });
   }
 };
 

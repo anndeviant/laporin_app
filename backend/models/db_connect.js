@@ -8,7 +8,7 @@ import setupAssociations from "./associations.js";
 
 const initializeDatabase = async () => {
   try {
-    // Test database connection
+    // Test database connection yang AS 1 + 1
     await db.authenticate();
     console.log("Database connection has been established successfully.");
 
