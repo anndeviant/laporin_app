@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import AdminRoutes from "./routes/AdminRoutes.js";
 import PublicRoutes from "./routes/PublicRoutes.js";
+import DocsRoutes from "./routes/DocsRoutes.js";
 import dotenv from "dotenv";
 import { initializeDatabase } from "./models/db_connect.js";
 
@@ -27,6 +28,7 @@ app.use(express.json());
 // New routes with prefixes for better organization
 app.use("/admin", AdminRoutes);
 app.use("/public", PublicRoutes);
+app.use("/api/docs", DocsRoutes);
 
 // Health check route
 app.get("/", (req, res) => {
