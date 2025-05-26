@@ -79,15 +79,23 @@ This backend provides RESTful API endpoints for the Laporin application, handlin
 
 - `GET /` - API health check
 
+### Documentation
+
+- `GET /docs` - API documentation page
+
 ### Public Endpoints (Guest/Reporter)
 
 #### Reports
 
-- `GET /public/reports` - Get all public reports (filtered)
+- `GET /public/reports` - Get all public reports with basic filtering
 - `GET /public/reports/:id` - View details of a specific report
-- `POST /public/reports` - Submit a new infrastructure damage report
-  - Body: `{ title, description, category_id, reporter_name, reporter_contact, location, images[] }`
-- `GET /public/reports/track/:id` - Track report status using report ID
+- `GET /public/reports/category/:categoryId` - Get reports by category
+- `GET /public/reports/status/:status` - Get reports by status (pending, verified, in_progress, resolved, rejected)
+- `POST /public/reports` - Submit a new infrastructure damage report (with file upload)
+  - Content-Type: `multipart/form-data`
+  - Body: `{ title, description, category_id, reporter_name, reporter_contact, location, agency_id?, image (file), lampiran (file, optional) }`
+- `GET /public/reports/track/:trackingId` - Track report status using tracking ID
+- `GET /public/statistics` - Get report statistics (count per category/status)
 
 #### Categories
 
@@ -99,44 +107,46 @@ This backend provides RESTful API endpoints for the Laporin application, handlin
 
 ### Admin Endpoints (Protected)
 
+All admin endpoints require authentication token in header: `Authorization: Bearer <token>`
+
 #### Authentication
 
-- `POST /auth/login` - Admin login
+- `POST /admin/register` - Register new admin
+  - Body: `{ username, password, name, email }`
+- `POST /admin/login` - Admin login
   - Body: `{ username, password }`
   - Returns: `{ accessToken, refreshToken }`
-- `POST /auth/logout` - Admin logout
-  - Body: `{ refreshToken }`
-- `GET /auth/token` - Refresh access token
-  - Header: `{ refreshToken }`
-  - Returns: `{ accessToken }`
+- `POST /admin/logout` - Admin logout
+- `GET /admin/token` - Refresh access token using refresh token
+
+#### Profile Management
+
+- `GET /admin/profile` - Get admin profile
+- `PATCH /admin/profile` - Update admin profile
 
 #### Report Management
 
-- `GET /admin/reports` - Get all reports with filtering options
-  - Query: `{ status, category, date_from, date_to, agency_id }`
+- `GET /admin/reports` - Get all reports with admin access
 - `GET /admin/reports/:id` - Get detailed report information
-- `PUT /admin/reports/:id` - Update report details
-  - Body: `{ title, description, category_id, status, agency_id }`
+- `POST /admin/reports` - Create new report (admin)
+- `PATCH /admin/reports/:id` - Update report details
 - `DELETE /admin/reports/:id` - Delete a report
-- `PUT /admin/reports/:id/verify` - Verify a pending report
-  - Body: `{ status, note, agency_id? }`
-- `PUT /admin/reports/:id/assign` - Assign report to an agency
-  - Body: `{ agency_id, note }`
-- `PUT /admin/reports/:id/resolve` - Mark report as resolved
-  - Body: `{ note }`
-- `PUT /admin/reports/:id/reject` - Reject a report
-  - Body: `{ note }`
-
-#### Report History
-
 - `GET /admin/reports/:id/history` - Get complete history of a report
+- `PATCH /admin/reports/:id/verify` - Verify a pending report
+  - Body: `{ note? }`
+- `PATCH /admin/reports/:id/assign` - Assign report to an agency
+  - Body: `{ agency_id, note? }`
+- `PATCH /admin/reports/:id/resolve` - Mark report as resolved
+  - Body: `{ note? }`
+- `PATCH /admin/reports/:id/reject` - Reject a report
+  - Body: `{ note }`
 
 #### Category Management
 
 - `GET /admin/categories` - Get all categories
 - `POST /admin/categories` - Create new category
   - Body: `{ name, description }`
-- `PUT /admin/categories/:id` - Update category
+- `PATCH /admin/categories/:id` - Update category
   - Body: `{ name, description }`
 - `DELETE /admin/categories/:id` - Delete category
 
@@ -145,16 +155,29 @@ This backend provides RESTful API endpoints for the Laporin application, handlin
 - `GET /admin/agencies` - Get all agencies
 - `POST /admin/agencies` - Create new agency
   - Body: `{ name, division, contact, service_area }`
-- `PUT /admin/agencies/:id` - Update agency
+- `PATCH /admin/agencies/:id` - Update agency
   - Body: `{ name, division, contact, service_area, is_active }`
 - `DELETE /admin/agencies/:id` - Delete agency
 
-#### Admin Management
+#### Admin User Management
 
 - `GET /admin/users` - Get all admin users
-- `POST /admin/users` - Create new admin user
-- `PUT /admin/users/:id` - Update admin user
 - `DELETE /admin/users/:id` - Delete admin user
+
+## Report Status Values
+
+- `pending` - New report, waiting for verification
+- `verified` - Report has been verified by admin
+- `in_progress` - Report is being handled by agency
+- `resolved` - Report has been resolved
+- `rejected` - Report has been rejected
+
+## File Upload
+
+- Supported formats: JPG, JPEG, PNG (images), PDF, DOC, DOCX (attachments)
+- Maximum size: 5MB per file
+- Image evidence is required
+- Additional attachments are optional
 
 ## Database Models
 
