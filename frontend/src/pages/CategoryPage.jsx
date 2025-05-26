@@ -5,10 +5,13 @@ import axios from "axios";
 import { BASE_URL } from "../utils";
 import Pagination from "../components/Table/Pagination";
 import TableReportCategory from "../components/Table/TableReportCategory";
+import InputField from "../components/Form/InputField";
 
 const CategoryPage = () => {
     const [category, setCategory] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [isAdding, setIsAdding] = useState(false);
+    const [newCategory, setNewCategory] = useState("");
     const perPage = 10;
 
     const totalPages = Math.ceil(category.length / perPage);
@@ -46,26 +49,80 @@ const CategoryPage = () => {
         }
     };
 
+    const handleAddCategory = async () => {
+        try {
+            await axios.post(`${BASE_URL}/admin/categories`, {
+                name: newCategory,
+            });
+            setNewCategory("");
+            setIsAdding(false);
+            getCategories(); // agar tidak reload full page
+        } catch (error) {
+            console.error("Gagal menambahkan Category:", error);
+            alert("Gagal menambahkan Category.");
+        }
+    };
+
+    const handleNewChange = (e) => {
+        setNewCategory(e.target.value);
+    };
+
     return (
         <div className="h-screen w-full flex overflow-auto antialiased text-gray-800 bg-white">
-            <Sidebar activeItem={"category"} />
+            <Sidebar activeItem="category" />
             <div className="flex-1 flex flex-col">
                 <TopBar />
-                <header
-                    aria-label="page caption"
-                    className="flex-none flex h-16 bg-gray-100 border-t px-4 items-center"
-                >
-                    <h1 id="page-caption" className="font-semibold text-lg">
-                        Category
-                    </h1>
+                <header className="flex-none flex h-16 bg-gray-100 border-t px-4 items-center">
+                    <h1 className="font-semibold text-lg">Category</h1>
                 </header>
-                <div className="bg-gray-100 justify-end flex pb-4 px-4 border-t">
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={setCurrentPage}
-                    />
+
+                <div className="w-full border-t bg-gray-100 px-4 pb-4 pt-2">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div className="w-full">
+                            {isAdding ? (
+                                <div className="flex flex-wrap md:flex-nowrap items-center gap-4">
+                                    <button
+                                        onClick={handleAddCategory}
+                                        className="bg-green-600 text-white px-4 py-1 rounded text-sm hover:bg-green-700"
+                                    >
+                                        Save
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setIsAdding(false);
+                                            setNewCategory("");
+                                        }}
+                                        className="bg-red-600 text-white px-4 py-1 rounded text-sm hover:bg-red-700"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <InputField
+                                        name="name"
+                                        placeholder="Category Name"
+                                        value={newCategory}
+                                        onChange={handleNewChange}
+                                    />
+                                </div>
+                            ) : (
+                                <button
+                                    onClick={() => setIsAdding(true)}
+                                    className="bg-blue-600 text-white px-4 py-1 rounded text-sm hover:bg-blue-700"
+                                >
+                                    Add Category
+                                </button>
+                            )}
+                        </div>
+
+                        <div className="w-full md:w-auto flex justify-end">
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={setCurrentPage}
+                            />
+                        </div>
+                    </div>
                 </div>
+
                 <TableReportCategory
                     categories={paginatedData}
                     onEdit={handleEdit}
