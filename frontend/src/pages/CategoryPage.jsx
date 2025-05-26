@@ -78,40 +78,42 @@ const CategoryPage = () => {
 
                 <div className="w-full border-t bg-gray-100 px-4 pb-4 pt-2">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div className="w-full">
-                            {isAdding ? (
-                                <div className="flex flex-wrap md:flex-nowrap items-center gap-4">
+                        <form onSubmit={handleAddCategory} >
+                            <div className="w-full">
+                                {isAdding ? (
+                                    <div className="flex flex-wrap md:flex-nowrap items-center gap-4">
+                                        <button
+                                            className="bg-green-600 text-white px-4 py-1 rounded text-sm hover:bg-green-700"
+                                        >
+                                            Save
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                setIsAdding(false);
+                                                setNewCategory("");
+                                            }}
+                                            className="bg-red-600 text-white px-4 py-1 rounded text-sm hover:bg-red-700"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <InputField
+                                            name="name"
+                                            placeholder="Category Name"
+                                            value={newCategory}
+                                            onChange={handleNewChange}
+                                            required
+                                        />
+                                    </div>
+                                ) : (
                                     <button
-                                        onClick={handleAddCategory}
-                                        className="bg-green-600 text-white px-4 py-1 rounded text-sm hover:bg-green-700"
+                                        onClick={() => setIsAdding(true)}
+                                        className="bg-blue-600 text-white px-4 py-1 rounded text-sm hover:bg-blue-700"
                                     >
-                                        Save
+                                        Add Category
                                     </button>
-                                    <button
-                                        onClick={() => {
-                                            setIsAdding(false);
-                                            setNewCategory("");
-                                        }}
-                                        className="bg-red-600 text-white px-4 py-1 rounded text-sm hover:bg-red-700"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <InputField
-                                        name="name"
-                                        placeholder="Category Name"
-                                        value={newCategory}
-                                        onChange={handleNewChange}
-                                    />
-                                </div>
-                            ) : (
-                                <button
-                                    onClick={() => setIsAdding(true)}
-                                    className="bg-blue-600 text-white px-4 py-1 rounded text-sm hover:bg-blue-700"
-                                >
-                                    Add Category
-                                </button>
-                            )}
-                        </div>
+                                )}
+                            </div>
+                        </form>
 
                         <div className="w-full md:w-auto flex justify-end">
                             <Pagination

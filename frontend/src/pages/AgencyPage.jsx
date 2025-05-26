@@ -91,59 +91,65 @@ const AgencyPage = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div className="w-full">
               {isAdding ? (
-                <div className="flex flex-wrap md:flex-nowrap items-center gap-4">
-                  <button
-                    onClick={handleAddAgency}
-                    className="bg-green-600 text-white px-4 py-1 rounded text-sm hover:bg-green-700"
-                  >
-                    Save
-                  </button>
+                <form onSubmit={handleAddAgency} >
+                  <div className="flex flex-wrap md:flex-nowrap items-center gap-4">
+                    <button
+                      className="bg-green-600 text-white px-4 py-1 rounded text-sm hover:bg-green-700"
+                    >
+                      Save
+                    </button>
 
-                  <button
-                    onClick={() => setIsAdding(false)}
-                    className="bg-red-600 text-white px-4 py-1 rounded text-sm hover:bg-red-700"
-                  >
-                    Cancel
-                  </button>
+                    <button
+                      onClick={() => setIsAdding(false)}
+                      className="bg-red-600 text-white px-4 py-1 rounded text-sm hover:bg-red-700"
+                    >
+                      Cancel
+                    </button>
 
-                  <div className="flex flex-wrap gap-4 items-center w-full">
-                    <InputField
-                      name="name"
-                      placeholder="Agency Name"
-                      value={newAgency.name}
-                      onChange={(e) => handleNewChange("name", e.target.value)}
-                    />
-                    <InputField
-                      name="division"
-                      placeholder="Division"
-                      value={newAgency.division}
-                      onChange={(e) => handleNewChange("division", e.target.value)}
-                    />
-                    <InputField
-                      name="contact"
-                      placeholder="Contact"
-                      value={newAgency.contact}
-                      onChange={(e) => handleNewChange("contact", e.target.value)}
-                    />
-                    <InputField
-                      name="service_area"
-                      placeholder="Service Area"
-                      value={newAgency.service_area}
-                      onChange={(e) => handleNewChange("service_area", e.target.value)}
-                    />
-                    <SelectField
-                      name="is_active"
-                      value={newAgency.is_active ? "true" : "false"}
-                      onChange={(e) =>
-                        handleNewChange("is_active", e.target.value === "true")
-                      }
-                      options={[
-                        { label: "Yes", value: "true" },
-                        { label: "No", value: "false" },
-                      ]}
-                    />
+                    <div className="flex flex-wrap gap-4 items-center w-full">
+                      <InputField
+                        name="name"
+                        placeholder="Agency Name"
+                        value={newAgency.name}
+                        onChange={(e) => handleNewChange("name", e.target.value)}
+                        required
+                      />
+                      <InputField
+                        name="division"
+                        placeholder="Division"
+                        value={newAgency.division}
+                        onChange={(e) => handleNewChange("division", e.target.value)}
+                        required
+                      />
+                      <InputField
+                        name="contact"
+                        placeholder="Contact"
+                        value={newAgency.contact}
+                        onChange={(e) => handleNewChange("contact", e.target.value)}
+                        required
+                      />
+                      <InputField
+                        name="service_area"
+                        placeholder="Service Area"
+                        value={newAgency.service_area}
+                        onChange={(e) => handleNewChange("service_area", e.target.value)}
+                        required
+                      />
+                      <SelectField
+                        name="is_active"
+                        value={newAgency.is_active ? "true" : "false"}
+                        onChange={(e) =>
+                          handleNewChange("is_active", e.target.value === "true")
+                        }
+                        options={[
+                          { label: "Yes", value: "true" },
+                          { label: "No", value: "false" },
+                        ]}
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
+                </form>
               ) : (
                 <button
                   onClick={() => setIsAdding(true)}
