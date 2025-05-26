@@ -51,10 +51,15 @@ This backend provides RESTful API endpoints for the Laporin application, handlin
    REFRESH_TOKEN_SECRET=your_refresh_token_secret
 
    # Client URL (for CORS)
-   CLIENT_URL=http://localhost:3000
+   CLIENT_URL=
 
    # Server Configuration
    PORT=5000
+
+   # Bucket Google Cloud Platform
+   PROJECT_ID =
+   KEY_FILE_NAME = ''
+   BUCKET_NAME =
    ```
 
 4. Create database
