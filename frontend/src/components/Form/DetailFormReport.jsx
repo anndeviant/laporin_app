@@ -80,16 +80,18 @@ const DetailReportForm = ({ report, onUpdate, onDelete }) => {
   return (
     <form className="max-w-3xl mx-auto bg-white p-6 rounded shadow">
       <h2 className="text-xl font-bold mb-4">Detail Laporan</h2>
-
-      <InputField name="title" value={dataLaporan.title} placeholder="Judul Laporan" disabled />
-      <TextArea name="description" value={dataLaporan.description} placeholder="Deskripsi" disabled />
-      <InputField name="reporter_name" value={dataLaporan.reporter_name} placeholder="Nama Pelapor" disabled />
-      <InputField name="reporter_contact" value={dataLaporan.reporter_contact} placeholder="Kontak Pelapor" disabled />
-      <InputField name="location" value={dataLaporan.location} placeholder="Lokasi" disabled />
-      <InputField name="image_url" value={dataLaporan.image_url} placeholder="URL Gambar" disabled />
-      <InputField name="lampiran_url" value={dataLaporan.lampiran_url || "-"} placeholder="Lampiran" disabled />
+      <InputField name="title" value={dataLaporan.title} placeholder="Judul Laporan" sub={"Title"} disabled />
+      <InputField name="category" value={dataLaporan.report_category?.name || "–"} placeholder="Kategori" sub={"Kategori"} disabled />
+      <TextArea name="description" value={dataLaporan.description} placeholder="Deskripsi" sub={"Deskripsi"} disabled />
+      <InputField name="reporter_name" value={dataLaporan.reporter_name} placeholder="Nama Pelapor" sub={"Nama Pelapor"} disabled />
+      <InputField name="reporter_contact" value={dataLaporan.reporter_contact} placeholder="Kontak Pelapor" sub={"Kontak Nama Pelapor"} disabled />
+      <InputField name="location" value={dataLaporan.location} placeholder="Lokasi" sub={"Lokasi"} disabled />
+      <InputField name="agency" value={dataLaporan.government_agency?.name || "–"} placeholder="Teruntuk" sub={"Teruntuk"} disabled />
+      <InputField name="image_url" value={dataLaporan.image_url} placeholder="URL Gambar" sub={"Link Gambar"} disabled />
+      <InputField name="lampiran_url" value={dataLaporan.lampiran_url || "-"} placeholder="Lampiran" sub={"Link Lampiran"} disabled />
 
       <SelectField
+        sub={"Status Laporan"}
         name="status"
         label=""
         options={statusOptions}
