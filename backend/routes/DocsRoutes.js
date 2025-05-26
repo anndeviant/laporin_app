@@ -92,11 +92,16 @@ router.get("/", (req, res) => {
                 <div class="p-4">
                     <!-- Header -->
                     <div class="text-center mb-5">
-                        <h1 class="display-4 text-primary">
+                        <h1 class="display-4 text-primary fw-bold">
                             <i class="fas fa-exclamation-triangle"></i> Laporin API
                         </h1>
-                        <p class="lead">REST API untuk Aplikasi Pelaporan Kerusakan Infrastruktur</p>
-                        <p class="text-muted">Base URL: <code>http://localhost:5000</code></p>
+                        <p class="lead fw-bold">REST API untuk Aplikasi Pelaporan Kerusakan Infrastruktur</p>
+                        <p class="text-muted">
+                        Base URL:
+                        <a href="http://localhost:5000" target="_blank" rel="noopener noreferrer" class="bg-secondary-subtle text-dark px-1 rounded small text-decoration-none">
+                            http://localhost:5000
+                        </a>
+                        </p>
                     </div>
 
                     <!-- Overview -->
