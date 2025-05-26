@@ -22,11 +22,22 @@ const TableReport = ({ reports, onReportClick }) => {
     },
     { key: "reporter_name", header: "Requester" },
     {
+      key: "government_agency.name",
+      header: "Agency",
+      render: (_, report) => report.government_agency?.name || "–",
+    },
+    {
+      key: "report_category.name",
+      header: "Category",
+      render: (_, report) => report.report_category?.name || "–",
+    },
+    {
       key: "updatedAt",
       header: "Requester updated",
       render: (value) => new Date(value).toLocaleString(),
     },
   ];
+
 
   return <Table data={reports} columns={columns} />;
 };
