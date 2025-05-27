@@ -119,6 +119,11 @@ const FormPage = () => {
     navigate('/bantuan');
   };
 
+  const handleTrackingClick = () => {
+    setActiveNavItem('tracking');
+    navigate('/tracking');
+  };
+
   return (
     <div>
       {/* Modern Navbar */}
@@ -156,6 +161,15 @@ const FormPage = () => {
                   }`}
               >
                 Lapor
+              </button>
+              <button
+                onClick={handleTrackingClick}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeNavItem === 'tracking'
+                  ? 'text-blue-600 bg-blue-50'
+                  : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                  }`}
+              >
+                Lacak Laporan
               </button>
               <button
                 onClick={handleBantuanClick}

@@ -53,6 +53,11 @@ const LandingPage = () => {
         navigate('/bantuan');
     };
 
+    const handleTrackingClick = () => {
+        setActiveNavItem('tracking');
+        navigate('/tracking');
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50">
             {/* Transparent Navbar */}
@@ -90,6 +95,15 @@ const LandingPage = () => {
                                     }`}
                             >
                                 Lapor
+                            </button>
+                            <button
+                                onClick={handleTrackingClick}
+                                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeNavItem === 'tracking'
+                                    ? 'text-blue-600 bg-blue-50'
+                                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                                    }`}
+                            >
+                                Lacak Laporan
                             </button>
                             <button
                                 onClick={handleBantuanClick}

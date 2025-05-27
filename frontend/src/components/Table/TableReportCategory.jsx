@@ -1,10 +1,12 @@
 import { useState } from "react";
 import Table from "./Table";
 import InputField from "../Form/InputField";
+import ConfirmDeleteModal from "../Modal/ConfirmDeleteModal";
 
 const TableReportCategory = ({ categories, onEdit, onDelete }) => {
     const [editRowId, setEditRowId] = useState(null);
     const [editedName, setEditedName] = useState("");
+    const [deleteModal, setDeleteModal] = useState({ isOpen: false, category: null });
 
     const handleEditClick = (category) => {
         setEditRowId(category.id);
@@ -26,7 +28,20 @@ const TableReportCategory = ({ categories, onEdit, onDelete }) => {
         setEditRowId(null);
     };
 
+    const handleDeleteClick = (category) => {
+        setDeleteModal({ isOpen: true, category });
+    };
 
+    const handleDeleteConfirm = () => {
+        if (onDelete && deleteModal.category) {
+            onDelete(deleteModal.category.id);
+        }
+        setDeleteModal({ isOpen: false, category: null });
+    };
+
+    const handleDeleteCancel = () => {
+        setDeleteModal({ isOpen: false, category: null });
+    };
 
     const columns = [
         { key: "id", header: "ID", className: "w-20 truncate" },
@@ -84,7 +99,7 @@ const TableReportCategory = ({ categories, onEdit, onDelete }) => {
                             Edit
                         </button>
                         <button
-                            onClick={() => onDelete?.(category.id)}
+                            onClick={() => handleDeleteClick(category)}
                             className="text-red-600 hover:underline text-sm"
                         >
                             Delete
@@ -94,7 +109,18 @@ const TableReportCategory = ({ categories, onEdit, onDelete }) => {
         },
     ];
 
-    return <Table data={categories} columns={columns} />;
+    return (
+        <>
+            <Table data={categories} columns={columns} />
+            <ConfirmDeleteModal
+                isOpen={deleteModal.isOpen}
+                onConfirm={handleDeleteConfirm}
+                onCancel={handleDeleteCancel}
+                title="Hapus Kategori Laporan"
+                message={`Apakah Anda yakin ingin menghapus kategori "${deleteModal.category?.name}"? Tindakan ini tidak dapat dibatalkan.`}
+            />
+        </>
+    );
 };
 
 export default TableReportCategory;
