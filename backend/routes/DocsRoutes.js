@@ -98,8 +98,8 @@ router.get("/", (req, res) => {
                         <p class="lead fw-bold">REST API untuk Aplikasi Pelaporan Kerusakan Infrastruktur</p>
                         <p class="text-muted">
                         Base URL:
-                        <a href="http://localhost:5000" target="_blank" rel="noopener noreferrer" class="bg-secondary-subtle text-dark px-1 rounded small text-decoration-none">
-                            http://localhost:5000
+                        <a href="https://laporin-be-298647753913.us-central1.run.app" target="_blank" rel="noopener noreferrer" class="bg-secondary-subtle text-dark px-1 rounded small text-decoration-none">
+                            https://laporin-be-298647753913.us-central1.run.app
                         </a>
                         </p>
                     </div>
@@ -337,7 +337,7 @@ Response: [
                             <div class="card endpoint-card method-post">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center mb-2">
-                                        <span class="badge bg-primary method-badge me-2">POST</span>
+                                        <span class="badge bg-danger method-badge me-2">DELETE</span>
                                         <code>/admin/logout</code>
                                     </div>
                                     <p class="mb-2">Logout admin</p>
