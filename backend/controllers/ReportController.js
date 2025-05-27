@@ -221,15 +221,17 @@ export const getPublicReportsByStatus = async (req, res) => {
 
 export const trackReportStatus = async (req, res) => {
   try {
-    const trackingId = req.params.trackingId;
-    const report = await Report.findOne({
-      where: { id: trackingId },
+    const reporterContact = req.params.trackingId;
+    const reports = await Report.findAll({
+      where: { reporter_contact: reporterContact },
       attributes: [
         "id",
         "title",
         "description",
         "status",
         "location",
+        "reporter_name",
+        "reporter_contact",
         "createdAt",
         "updatedAt",
       ],
@@ -238,14 +240,21 @@ export const trackReportStatus = async (req, res) => {
           model: ReportCategory,
           attributes: ["name"],
         },
+        {
+          model: GovernmentAgency,
+          attributes: ["name"],
+        },
       ],
+      order: [["createdAt", "DESC"]],
     });
 
-    if (!report) {
-      return res.status(404).json({ msg: "Aduan tidak ditemukan" });
+    if (!reports || reports.length === 0) {
+      return res
+        .status(404)
+        .json({ msg: "Tidak ada aduan ditemukan untuk kontak ini" });
     }
 
-    res.status(200).json(report);
+    res.status(200).json(reports);
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ msg: "Terjadi kesalahan saat melacak aduan" });
