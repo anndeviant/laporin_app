@@ -208,28 +208,28 @@ async function loginAdmin(req, res) {
       const { password: _, refresh_token: __, ...safeAdminData } = adminPlain;
 
       //Check if admin already has an active session
-      if (admin.refresh_token) {
-        try {
-          // Verify if the token is still valid
-          const isValidToken = jwt.verify(
-            admin.refresh_token,
-            process.env.REFRESH_TOKEN_SECRET
-          );
+      // if (admin.refresh_token) {
+      //   try {
+      //     // Verify if the token is still valid
+      //     const isValidToken = jwt.verify(
+      //       admin.refresh_token,
+      //       process.env.REFRESH_TOKEN_SECRET
+      //     );
 
-          if (isValidToken) {
-            return res.status(403).json({
-              status: "Failed",
-              message: "Admin sudah login di perangkat lain",
-              alreadyLoggedIn: true,
-            });
-          }
-        } catch (tokenError) {
-          // Token is invalid/expired, can proceed with login
-          console.log(
-            "Token sebelumnya telah kedaluwarsa, mengizinkan login baru"
-          );
-        }
-      }
+      //     if (isValidToken) {
+      //       return res.status(403).json({
+      //         status: "Failed",
+      //         message: "Admin sudah login di perangkat lain",
+      //         alreadyLoggedIn: true,
+      //       });
+      //     }
+      //   } catch (tokenError) {
+      //     // Token is invalid/expired, can proceed with login
+      //     console.log(
+      //       "Token sebelumnya telah kedaluwarsa, mengizinkan login baru"
+      //     );
+      //   }
+      // }
 
       const decryptPassword = await bcrypt.compare(password, admin.password);
 
@@ -249,7 +249,10 @@ async function loginAdmin(req, res) {
           { expiresIn: "7d" }
         );
 
-        await Admin.update({ refresh_token: null }, { where: { id: admin.id } });
+        await Admin.update(
+          { refresh_token: null },
+          { where: { id: admin.id } }
+        );
         await Admin.update(
           { refresh_token: refreshToken },
           { where: { id: admin.id } }

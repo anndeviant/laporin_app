@@ -9,7 +9,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const storage = new Storage();
-const bucketName = process.env.GCS_BUCKET_NAME;
+const bucketName = process.env.BUCKET_NAME;
 
 // Helper function to extract filename from GCS URL
 const extractFilenameFromUrl = (url) => {
