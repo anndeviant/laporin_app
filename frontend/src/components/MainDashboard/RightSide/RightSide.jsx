@@ -1,18 +1,17 @@
 import { useState } from "react";
-import axios from "axios";
-
+import axiosInstance from "../../../utils/axiosInstance";
 import StatusSumary from "./StatusSumary";
 import TableReport from "./TableReport";
 import Pagination from "../../Table/Pagination";
 import DetailReportForm from "../../Form/DetailFormReport";
 import { BASE_URL } from "../../../utils";
 
-const RightSide = ({ statusCountsToday, statusCountsWeek, reports }) => {
+const RightSide = ({ statusCountsToday, statusCountsWeek, reports, onUpdateReport, onDeleteReport }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedReport, setSelectedReport] = useState(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const statuses = ["pending", "verified", "in_progress", "resolved", "rejected"];
-  
+
   const perPage = 10;
   const totalPages = Math.ceil(reports.length / perPage);
   const paginatedData = reports.slice(
@@ -23,7 +22,7 @@ const RightSide = ({ statusCountsToday, statusCountsWeek, reports }) => {
   const handleReportClick = async (id) => {
     setLoadingDetail(true);
     try {
-      const res = await axios.get(`${BASE_URL}/admin/reports/${id}`);
+      const res = await axiosInstance.get(`${BASE_URL}/admin/reports/${id}`);
       setSelectedReport(res.data);
     } catch (err) {
       alert("Gagal mengambil detail laporan.");
@@ -32,9 +31,6 @@ const RightSide = ({ statusCountsToday, statusCountsWeek, reports }) => {
     }
   };
 
-  const handleUpdateOrDelete = () => {
-    window.location.reload(); // reload untuk refresh data dari server
-  };
   return (
     <section className={`flex flex-col flex-auto min-h-full border-l overflow-${!selectedReport ? ("hidden") : ("auto")}`}>
       {/* Bagian Atas: Ringkasan + Pagination */}
@@ -56,7 +52,9 @@ const RightSide = ({ statusCountsToday, statusCountsWeek, reports }) => {
       {/* Konten Utama */}
       <div className="p-4">
         {loadingDetail ? (
-          <p>Loading detail...</p>
+          <div className="flex items-center justify-center h-screen">
+            <div className="w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+          </div>
         ) : selectedReport ? (
           <>
             <div className="flex items-center mb-4">
@@ -80,8 +78,9 @@ const RightSide = ({ statusCountsToday, statusCountsWeek, reports }) => {
 
             <DetailReportForm
               report={selectedReport}
-              onUpdate={handleUpdateOrDelete}
-              onDelete={handleUpdateOrDelete}
+              onUpdate={onUpdateReport}
+              back={() => setSelectedReport(null)}
+              onDelete={onDeleteReport}
             />
           </>
         ) : (

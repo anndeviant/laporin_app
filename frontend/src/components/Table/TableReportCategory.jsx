@@ -1,8 +1,6 @@
 import { useState } from "react";
 import Table from "./Table";
 import InputField from "../Form/InputField";
-import axios from "axios";
-import { BASE_URL } from "../../utils";
 
 const TableReportCategory = ({ categories, onEdit, onDelete }) => {
     const [editRowId, setEditRowId] = useState(null);
@@ -19,20 +17,13 @@ const TableReportCategory = ({ categories, onEdit, onDelete }) => {
     };
 
     const handleSaveClick = async (category) => {
-        try {
-            await axios.patch(`${BASE_URL}/admin/categories/${category.id}`, { name: editedName });
-            const updatedCategory = {
-                ...category,
-                name: editedName,
-                updatedAt: new Date().toISOString(),
-            };
-
-            if (onEdit) onEdit(updatedCategory);
-            setEditRowId(null);
-        } catch (err) {
-            console.error(err);
-            alert("Gagal menyimpan perubahan.");
-        }
+        const updatedCategory = {
+            ...category,
+            name: editedName,
+            updatedAt: new Date().toISOString(),
+        };
+        if (onEdit) onEdit(updatedCategory);
+        setEditRowId(null);
     };
 
 

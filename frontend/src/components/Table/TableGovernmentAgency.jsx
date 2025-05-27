@@ -2,8 +2,6 @@ import { useState } from "react";
 import Table from "./Table";
 import InputField from "../Form/InputField";
 import SelectField from "../Form/SelectField";
-import axios from "axios";
-import { BASE_URL } from "../../utils";
 
 const TableGovernmentAgency = ({ agencies, onEdit, onDelete }) => {
   const [editRowId, setEditRowId] = useState(null);
@@ -26,14 +24,13 @@ const TableGovernmentAgency = ({ agencies, onEdit, onDelete }) => {
   };
 
   const saveEdit = async (agency) => {
-    try {
-      await axios.patch(`${BASE_URL}/admin/agencies/${agency.id}`, editData);
-      if (onEdit) onEdit({ ...agency, ...editData });
-      cancelEdit();
-    } catch (error) {
-      console.error(error);
-      alert("Gagal menyimpan perubahan.");
-    }
+    const updatedAgency = {
+      ...agency,
+      ...editData,
+      updatedAt: new Date().toISOString(),
+    };
+    if (onEdit) onEdit(updatedAgency);
+    cancelEdit();
   };
 
   const handleChange = (field, value) => {

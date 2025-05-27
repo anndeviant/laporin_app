@@ -1,7 +1,7 @@
 import TopBar from "../components/TopBar/TopBar";
 import Sidebar from "../components/Sidebar/Sidebar";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import { BASE_URL } from "../utils";
 import Pagination from "../components/Table/Pagination";
 import TableReportCategory from "../components/Table/TableReportCategory";
@@ -27,38 +27,43 @@ const CategoryPage = () => {
 
     const getCategories = async () => {
         try {
-            const response = await axios.get(`${BASE_URL}/admin/categories`);
+            const response = await axiosInstance.get(`${BASE_URL}/admin/categories`);
             setCategory(response.data);
         } catch (error) {
-            console.error("Gagal memuat kategori:", error);
+            console.error("Gagal memuat kategori:");
         }
     };
 
-    const handleEdit = (updatedCategory) => {
-        setCategory((prev) =>
-            prev.map((cat) => (cat.id === updatedCategory.id ? updatedCategory : cat))
-        );
+    const handleEdit = async (updatedCategory) => {
+        try {
+            await axiosInstance.patch(`${BASE_URL}/admin/categories/${updatedCategory.id}`, { name: updatedCategory.name });
+            setCategory((prev) =>
+                prev.map((cat) => (cat.id === updatedCategory.id ? updatedCategory : cat))
+            );
+        } catch (err) {
+            alert("Gagal menyimpan perubahan.");
+        }
     };
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`${BASE_URL}/admin/categories/${id}`);
+            await axiosInstance.delete(`${BASE_URL}/admin/categories/${id}`);
             setCategory((prev) => prev.filter((cat) => cat.id !== id));
         } catch (error) {
-            console.error("Gagal menghapus kategori:", error);
+            console.error("Gagal menghapus kategori:");
         }
     };
 
     const handleAddCategory = async () => {
         try {
-            await axios.post(`${BASE_URL}/admin/categories`, {
+            await axiosInstance.post(`${BASE_URL}/admin/categories`, {
                 name: newCategory,
             });
             setNewCategory("");
             setIsAdding(false);
             getCategories(); // agar tidak reload full page
         } catch (error) {
-            console.error("Gagal menambahkan Category:", error);
+            console.error("Gagal menambahkan Category:");
             alert("Gagal menambahkan Category.");
         }
     };

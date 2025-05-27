@@ -1,9 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
 import InputField from "./InputField";
 import SelectField from "./SelectField";
 import TextArea from "./TextArea";
-import { BASE_URL } from "../../utils";
 
 const statusOptions = [
   { value: "pending", label: "Pending" },
@@ -13,7 +11,7 @@ const statusOptions = [
   { value: "rejected", label: "Ditolak" },
 ];
 
-const DetailReportForm = ({ report, onUpdate, onDelete }) => {
+const DetailReportForm = ({ report, onUpdate, onDelete, back }) => {
   const [dataLaporan, setDataLaporan] = useState({ ...report });
   const [bisaEdit, setBisaEdit] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -28,36 +26,29 @@ const DetailReportForm = ({ report, onUpdate, onDelete }) => {
     }
   };
 
-  const kirimPerubahan = async (data, method = "patch") => {
-    setLoading(true);
-    try {
-      const res = await axios[method](
-        `${BASE_URL}/admin/reports/${dataLaporan.id}`,
-        data
-      );
-      const dataBaru = res.data;
 
-      setDataLaporan(dataBaru);
-      if (onUpdate) onUpdate(dataBaru);
-      setBisaEdit(false);
-    } catch (err) {
-      console.error(err);
-      alert("Gagal update laporan.");
-    } finally {
-      setLoading(false);
-    }
+  const kirimPerubahan = async (data) => {
+    const updatedData = {
+      ...dataLaporan,
+      ...data,
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (onUpdate) onUpdate(updatedData); 
+    setBisaEdit(false);
   };
 
-  const tanganiLaporan = () => {
+  const tanganiLaporan = async () => {
     const data = {
-      admin_id: 1,
       status: "in_progress",
     };
-    kirimPerubahan(data);
+    await kirimPerubahan(data);
+    back();
   };
 
-  const simpanPerubahan = () => {
-    kirimPerubahan(dataLaporan);
+  const simpanPerubahan = async () => {
+    await kirimPerubahan(dataLaporan);
+    back();
   };
 
   const hapusLaporan = async () => {
@@ -65,16 +56,9 @@ const DetailReportForm = ({ report, onUpdate, onDelete }) => {
     if (!yakin) return;
 
     setLoading(true);
-    try {
-      await axios.delete(`${BASE_URL}/admin/reports/${dataLaporan.id}`);
-      alert("Laporan berhasil dihapus.");
-      if (onDelete) onDelete(dataLaporan.id);
-    } catch (err) {
-      console.error(err);
-      alert("Gagal hapus laporan.");
-    } finally {
-      setLoading(false);
-    }
+    await onDelete(dataLaporan.id);
+    setLoading(false);
+    back()
   };
 
   return (
