@@ -16,7 +16,7 @@ const PORT = process.env.BACKEND_PORT;
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://laporin-frontend-dot-f-02-450706.uc.r.appspot.com",
     credentials: true,
   })
 );
