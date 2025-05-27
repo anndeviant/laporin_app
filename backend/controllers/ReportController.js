@@ -5,10 +5,11 @@ import GovernmentAgency from "../models/governmentAgency.model.js";
 import { Op } from "sequelize";
 import { uploadFileToGCS } from "../middleware/UploadFile.js";
 import { Storage } from "@google-cloud/storage";
+import dotenv from "dotenv";
+dotenv.config();
 
-// Create storage client
 const storage = new Storage();
-const bucketName = process.env.GCS_BUCKET_NAME || "your-bucket-name";
+const bucketName = process.env.GCS_BUCKET_NAME;
 
 // Helper function to extract filename from GCS URL
 const extractFilenameFromUrl = (url) => {
