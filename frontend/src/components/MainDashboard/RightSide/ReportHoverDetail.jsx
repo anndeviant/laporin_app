@@ -27,10 +27,11 @@ const ReportHoverDetail = ({ report }) => {
             </span>
             <span className="ml-2 text-gray-700">Report #{report.id}</span>
             <span className="ml-1">{report.status}</span>
+            <span className="ml-1">{`(${report.report_category?.name || "–"})`}</span>
           </div>
         </header>
         <section className="mt-5">
-          <h1 className="text-base font-semibold mt-3">{report.title}</h1>
+          <h1 className="text-base font-semibold mt-3">{`${report.title} (${report.government_agency?.name || "–"})`}</h1>
           <p className="mt-2 whitespace-pre-line">{report.description}</p>
         </section>
         <footer className="mt-4 text-sm text-gray-700">

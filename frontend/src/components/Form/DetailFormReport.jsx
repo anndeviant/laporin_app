@@ -1,9 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
 import InputField from "./InputField";
 import SelectField from "./SelectField";
 import TextArea from "./TextArea";
-import { BASE_URL } from "../../utils";
 
 const statusOptions = [
   { value: "pending", label: "Pending" },
@@ -13,7 +11,7 @@ const statusOptions = [
   { value: "rejected", label: "Ditolak" },
 ];
 
-const DetailReportForm = ({ report, onUpdate, onDelete }) => {
+const DetailReportForm = ({ report, onUpdate, onDelete, back }) => {
   const [dataLaporan, setDataLaporan] = useState({ ...report });
   const [bisaEdit, setBisaEdit] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -28,36 +26,29 @@ const DetailReportForm = ({ report, onUpdate, onDelete }) => {
     }
   };
 
-  const kirimPerubahan = async (data, method = "patch") => {
-    setLoading(true);
-    try {
-      const res = await axios[method](
-        `${BASE_URL}/admin/reports/${dataLaporan.id}`,
-        data
-      );
-      const dataBaru = res.data;
 
-      setDataLaporan(dataBaru);
-      if (onUpdate) onUpdate(dataBaru);
-      setBisaEdit(false);
-    } catch (err) {
-      console.error(err);
-      alert("Gagal update laporan.");
-    } finally {
-      setLoading(false);
-    }
+  const kirimPerubahan = async (data) => {
+    const updatedData = {
+      ...dataLaporan,
+      ...data,
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (onUpdate) onUpdate(updatedData); 
+    setBisaEdit(false);
   };
 
-  const tanganiLaporan = () => {
+  const tanganiLaporan = async () => {
     const data = {
-      admin_id: 1,
       status: "in_progress",
     };
-    kirimPerubahan(data);
+    await kirimPerubahan(data);
+    back();
   };
 
-  const simpanPerubahan = () => {
-    kirimPerubahan(dataLaporan);
+  const simpanPerubahan = async () => {
+    await kirimPerubahan(dataLaporan);
+    back();
   };
 
   const hapusLaporan = async () => {
@@ -65,31 +56,33 @@ const DetailReportForm = ({ report, onUpdate, onDelete }) => {
     if (!yakin) return;
 
     setLoading(true);
-    try {
-      await axios.delete(`${BASE_URL}/admin/reports/${dataLaporan.id}`);
-      alert("Laporan berhasil dihapus.");
-      if (onDelete) onDelete(dataLaporan.id);
-    } catch (err) {
-      console.error(err);
-      alert("Gagal hapus laporan.");
-    } finally {
-      setLoading(false);
-    }
+    await onDelete(dataLaporan.id);
+    setLoading(false);
+    back()
   };
 
   return (
     <form className="max-w-3xl mx-auto bg-white p-6 rounded shadow">
       <h2 className="text-xl font-bold mb-4">Detail Laporan</h2>
-
-      <InputField name="title" value={dataLaporan.title} placeholder="Judul Laporan" disabled />
-      <TextArea name="description" value={dataLaporan.description} placeholder="Deskripsi" disabled />
-      <InputField name="reporter_name" value={dataLaporan.reporter_name} placeholder="Nama Pelapor" disabled />
-      <InputField name="reporter_contact" value={dataLaporan.reporter_contact} placeholder="Kontak Pelapor" disabled />
-      <InputField name="location" value={dataLaporan.location} placeholder="Lokasi" disabled />
-      <InputField name="image_url" value={dataLaporan.image_url} placeholder="URL Gambar" disabled />
-      <InputField name="lampiran_url" value={dataLaporan.lampiran_url || "-"} placeholder="Lampiran" disabled />
+      <InputField readOnly name="title" value={dataLaporan.title} placeholder="Judul Laporan" sub={"Title"} disabled />
+      <InputField readOnly name="category" value={dataLaporan.report_category?.name || "–"} placeholder="Kategori" sub={"Kategori"} disabled />
+      <TextArea readOnly name="description" value={dataLaporan.description} placeholder="Deskripsi" sub={"Deskripsi"} disabled />
+      <InputField readOnly name="reporter_name" value={dataLaporan.reporter_name} placeholder="Nama Pelapor" sub={"Nama Pelapor"} disabled />
+      <InputField readOnly name="reporter_contact" value={dataLaporan.reporter_contact} placeholder="Kontak Pelapor" sub={"Kontak Nama Pelapor"} disabled />
+      <InputField readOnly name="location" value={dataLaporan.location} placeholder="Lokasi" sub={"Lokasi"} disabled />
+      <InputField readOnly name="agency" value={dataLaporan.government_agency?.name || "–"} placeholder="Teruntuk" sub={"Teruntuk"} disabled />
+      <InputField readOnly name="image_url" value={dataLaporan.image_url} placeholder="URL Gambar" sub={"Link Gambar"} />
+      <img
+        src={dataLaporan.image_url}
+        alt="Preview"
+        className="w-full h-full object-cover rounded border"
+        style={{ cursor: 'pointer' }}
+        onClick={() => window.open(dataLaporan.image_url, '_blank')}
+      />
+      <InputField readOnly name="lampiran_url" value={dataLaporan.lampiran_url || "-"} placeholder="Lampiran" sub={"Link Lampiran"} disabled />
 
       <SelectField
+        sub={"Status Laporan"}
         name="status"
         label=""
         options={statusOptions}

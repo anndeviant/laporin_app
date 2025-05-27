@@ -15,7 +15,7 @@ const Sidebar = ({ activeItem }) => {
 
       <ul>
         <SidebarItem
-          href="/"
+          href="/admin/home"
           title="Home"
           active={activeItem === "home"}
           icon={
@@ -25,7 +25,7 @@ const Sidebar = ({ activeItem }) => {
           }
         />
         <SidebarItem
-          href="/category"
+          href="/admin/category"
           title="Category"
           active={activeItem === "category"}
           icon={
@@ -35,7 +35,7 @@ const Sidebar = ({ activeItem }) => {
           }
         />
         <SidebarItem
-          href="/agency"
+          href="/admin/agency"
           title="Agency"
           active={activeItem === "agency"}
           icon={
