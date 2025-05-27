@@ -100,7 +100,7 @@ const FormPage = () => {
     } catch (error) {
       console.error("Gagal mengirim aduan:");
       if (error.response) {
-        alert(`Gagal: ${"Terjadi kesalahan di server."}`);
+        alert(`Gagal: ${error.response.data.message || "Terjadi kesalahan"}`);
       } else {
         alert("Tidak dapat terhubung ke server.");
       }
