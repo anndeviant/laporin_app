@@ -56,7 +56,8 @@ const AgencyPage = () => {
     }
   };
 
-  const handleAddAgency = async () => {
+  const handleAddAgency = async (e) => {
+    e.preventDefault();
     try {
       await axios.post(`${BASE_URL}/admin/agencies`, newAgency);
       setIsAdding(false);
@@ -91,15 +92,17 @@ const AgencyPage = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div className="w-full">
               {isAdding ? (
-                <form onSubmit={handleAddAgency} >
+                <form onSubmit={handleAddAgency}>
                   <div className="flex flex-wrap md:flex-nowrap items-center gap-4">
                     <button
+                      type="submit"
                       className="bg-green-600 text-white px-4 py-1 rounded text-sm hover:bg-green-700"
                     >
                       Save
                     </button>
 
                     <button
+                      type="button"
                       onClick={() => setIsAdding(false)}
                       className="bg-red-600 text-white px-4 py-1 rounded text-sm hover:bg-red-700"
                     >
