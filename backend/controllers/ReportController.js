@@ -34,6 +34,16 @@ export const getReportsById = async (req, res) => {
       where: {
         id: req.params.id,
       },
+      include: [
+        {
+          model: ReportCategory,
+          attributes: ["name"],
+        },
+        {
+          model: GovernmentAgency,
+          attributes: ["name"],
+        },
+      ],
     });
     res.status(200).json(response);
   } catch (error) {
@@ -106,14 +116,38 @@ export const createReports = async (req, res) => {
 
 export const updateReport = async (req, res) => {
   try {
-    await Report.update(req.body, {
-      where: {
-        id: req.params.id,
-      },
+    const reportId = req.params.id;
+    const adminId = req.adminId; // dari token
+
+    // Ambil laporan berdasarkan ID
+    const report = await Report.findByPk(reportId);
+
+    if (!report) {
+      return res.status(404).json({ message: "Laporan tidak ditemukan." });
+    }
+
+    // Persiapkan data update
+    const dataUpdate = {
+      ...req.body,
+    };
+
+    // Jika admin_id di DB masih null, baru update
+    if (report.admin_id === null) {
+      dataUpdate.admin_id = adminId;
+    }
+
+    // Update laporan
+    await report.update(dataUpdate);
+
+    // Ambil kembali dengan relasi
+    const updatedReport = await Report.findByPk(reportId, {
+      include: ["report_category", "government_agency"],
     });
-    res.status(200).json({ msg: "Report berhasil di update" });
+
+    res.status(200).json(updatedReport);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
+    res.status(500).json({ message: "Gagal memperbarui laporan." });
   }
 };
 

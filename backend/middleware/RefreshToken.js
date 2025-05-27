@@ -4,13 +4,7 @@ import jwt from "jsonwebtoken";
 export const refreshAccessToken = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
-
-    if (!refreshToken) {
-      return res.status(401).json({
-        status: false,
-        message: "Token refresh tidak ditemukan",
-      });
-    }
+    if (!refreshToken) return res.sendStatus(401);
 
     const admin = await Admin.findOne({
       where: {
@@ -18,50 +12,31 @@ export const refreshAccessToken = async (req, res) => {
       },
     });
 
-    if (!admin || !admin.refresh_token) {
+    if (!admin || admin.refresh_token !== refreshToken) {
+      res.clearCookie("refreshToken");
       return res.status(403).json({
-        status: false,
-        message: "Token tidak valid atau admin tidak ditemukan",
+        message: "Akun digunakan di perangkat lain atau token tidak cocok",
       });
     }
 
-    jwt.verify(
-      refreshToken,
-      process.env.REFRESH_TOKEN_SECRET,
-      (err, decoded) => {
-        if (err) {
-          return res.status(403).json({
-            status: false,
-            message: "Token tidak valid",
-          });
-        }
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+      if (err) return res.sendStatus(403);
 
-        // Buat access token baru
-        const accessToken = jwt.sign(
-          {
-            adminId: decoded.adminId,
-            username: decoded.username,
-            name: decoded.name,
-            email: decoded.email,
-          },
-          process.env.ACCESS_TOKEN_SECRET,
-          {
-            expiresIn: "15m", // Durasi token 15 menit
-          }
-        );
+      const adminPlain = admin.toJSON();
+      // Hindari data sensitif
+      const { password, refresh_token, ...safeAdminData } = adminPlain;
 
-        // Kirim token baru
-        return res.json({
-          status: true,
-          message: "Token berhasil diperbarui",
-          accessToken,
-        });
-      }
-    );
+      const accessToken = jwt.sign(
+        safeAdminData,
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "1h" } // direkomendasikan 5 menit
+      );
+
+      res.json({ accessToken });
+    });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({
-      status: false,
       message: "Terjadi kesalahan saat memproses token",
     });
   }

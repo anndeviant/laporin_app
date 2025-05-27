@@ -2,8 +2,8 @@ import AddDropdown from "./TopBarLeft/AddDropdown";
 
 const TopBarLeft = () => {
     const menuItems = [
-        { label: 'Agency', href: '/agency' },
-        { label: 'Category', href: '/category' },
+        { label: 'Agency', href: 'admin/agency' },
+        { label: 'Category', href: 'admin/category' },
     ];
     return (
         <ul

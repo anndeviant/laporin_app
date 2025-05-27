@@ -1,12 +1,14 @@
 import { useState } from "react";
-import axios from "axios";
 import InputField from "../components/Form/InputField";
 import { BASE_URL } from "../utils";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
 const LoginRegisterForm = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     username: "",
@@ -28,13 +30,18 @@ const LoginRegisterForm = () => {
       }
 
       try {
-        const res = await axios.post(`${BASE_URL}/admin/login`, {
-          username: formData.username,
-          password: formData.password,
-        });
+        const res = await axios.post(
+          `${BASE_URL}/admin/login`,
+          {
+            username: formData.username,
+            password: formData.password,
+          },
+        );
 
-        console.log("Login Success:", res.data);
+        // Simpan accessToken ke localStorage
+        localStorage.setItem("accessToken", res.data.accessToken);
         alert("Login successful!");
+        navigate("/admin/home");
       } catch (error) {
         console.error("Login Error:", error.response?.data || error.message);
         alert(error.response?.data?.message || "Login failed.");
@@ -51,14 +58,12 @@ const LoginRegisterForm = () => {
       }
 
       try {
-        const res = await axios.post(`${BASE_URL}/admin/register`, {
+        await axios.post(`${BASE_URL}/admin/register`, {
           name,
           username,
           email,
           password,
         });
-
-        console.log("Register Success:", res.data);
         alert("Registration successful. Please login.");
         setIsLogin(true);
       } catch (error) {

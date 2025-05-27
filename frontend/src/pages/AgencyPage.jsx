@@ -2,7 +2,7 @@ import Sidebar from "../components/Sidebar/Sidebar";
 import TopBar from "../components/TopBar/TopBar";
 import TableGovernmentAgency from "../components/Table/TableGovernmentAgency";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import { BASE_URL } from "../utils";
 import Pagination from "../components/Table/Pagination";
 import InputField from "../components/Form/InputField";
@@ -34,32 +34,38 @@ const AgencyPage = () => {
 
   const getAgencies = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/admin/agencies`);
+      const response = await axiosInstance.get(`${BASE_URL}/admin/agencies`);
       setAgency(response.data);
     } catch (error) {
-      console.error("Gagal memuat agency:", error);
+      console.error("Gagal memuat agency:");
     }
   };
 
-  const handleEdit = (updatedAgency) => {
-    setAgency((prev) =>
-      prev.map((ag) => (ag.id === updatedAgency.id ? updatedAgency : ag))
-    );
+  const handleEdit = async (updatedAgency) => {
+    try {
+      await axiosInstance.patch(`${BASE_URL}/admin/agencies/${updatedAgency.id}`, updatedAgency)
+        setAgency((prev) =>
+          prev.map((ag) => (ag.id === updatedAgency.id ? updatedAgency : ag))
+        )
+    } catch (err) {
+      alert("Gagal menyimpan perubahan.");
+    }
   };
+
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${BASE_URL}/admin/agencies/${id}`);
+      await axiosInstance.delete(`${BASE_URL}/admin/agencies/${id}`);
       setAgency((prev) => prev.filter((ag) => ag.id !== id));
     } catch (error) {
-      console.error("Gagal menghapus agency:", error);
+      console.error("Gagal menghapus agency:");
     }
   };
 
   const handleAddAgency = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${BASE_URL}/admin/agencies`, newAgency);
+      await axiosInstance.post(`${BASE_URL}/admin/agencies`, newAgency);
       setIsAdding(false);
       setNewAgency({
         name: "",
@@ -70,7 +76,7 @@ const AgencyPage = () => {
       })
       getAgencies();
     } catch (error) {
-      console.error("Gagal menambahkan agency:", error);
+      console.error("Gagal menambahkan agency:");
       alert("Gagal menambahkan agency.");
     }
   };

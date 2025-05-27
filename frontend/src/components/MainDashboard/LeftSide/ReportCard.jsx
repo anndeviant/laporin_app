@@ -1,6 +1,4 @@
-import axios from "axios";
 import { useState } from "react";
-import { BASE_URL } from "../../../utils"; // sesuaikan path jika perlu
 
 const ReportCard = ({
   id,
@@ -11,29 +9,33 @@ const ReportCard = ({
   location,
   government_agency,
   report_category,
+  onUpdate
 }) => {
   const [loading, setLoading] = useState(false);
 
-  const kirimPerubahan = async (data, method = "patch") => {
-    setLoading(true);
-    try {
-      const res = await axios[method](`${BASE_URL}/admin/reports/${id}`, data);
-    } catch (err) {
-      console.error(err);
-      alert("Gagal update laporan.");
-    } finally {
-      setLoading(false);
-      window.location.reload();
-    }
+  const kirimPerubahan = async (data) => {
+    const updatedData = {
+      id,
+      title,
+      description,
+      reporter_name,
+      createdAt,
+      location,
+      government_agency,
+      report_category,
+      ...data,
+      updatedAt: new Date().toISOString(),
+    };
+    if (onUpdate) onUpdate(updatedData);
   };
 
-  const tanganiLaporan = () => {
-    kirimPerubahan({
-      admin_id: 1,
+
+  const tanganiLaporan = async () => {
+    const data = {
       status: "in_progress",
-    });
+    };
+    await kirimPerubahan(data);
   };
-
   return (
     <article
       tabIndex="0"

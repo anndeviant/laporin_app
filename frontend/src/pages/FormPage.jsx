@@ -38,7 +38,7 @@ const FormPage = () => {
         setAgencies(agencyRes.data);
         setCategories(categoryRes.data);
       } catch (error) {
-        console.error("Gagal memuat data:", error);
+        console.error("Gagal memuat data:");
       }
     };
     fetchData();
@@ -98,9 +98,9 @@ const FormPage = () => {
       setImagePreview(null);
       setLampiranFile(null);
     } catch (error) {
-      console.error("Gagal mengirim aduan:", error);
+      console.error("Gagal mengirim aduan:");
       if (error.response) {
-        alert(`Gagal: ${error.response.data.msg || "Terjadi kesalahan di server."}`);
+        alert(`Gagal: ${"Terjadi kesalahan di server."}`);
       } else {
         alert("Tidak dapat terhubung ke server.");
       }
