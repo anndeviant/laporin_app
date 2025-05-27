@@ -207,7 +207,7 @@ async function loginAdmin(req, res) {
       const adminPlain = admin.toJSON(); // Convert to object
       const { password: _, refresh_token: __, ...safeAdminData } = adminPlain;
 
-      // Check if admin already has an active session
+      //Check if admin already has an active session
       if (admin.refresh_token) {
         try {
           // Verify if the token is still valid
@@ -249,6 +249,7 @@ async function loginAdmin(req, res) {
           { expiresIn: "7d" }
         );
 
+        await Admin.update({ refresh_token: null }, { where: { id: admin.id } });
         await Admin.update(
           { refresh_token: refreshToken },
           { where: { id: admin.id } }
