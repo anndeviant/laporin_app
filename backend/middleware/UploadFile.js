@@ -73,10 +73,75 @@ async function uploadFileToGCS(file, folderName) {
   }
 }
 
+// Helper function to extract filename from GCS URL
+const extractFilenameFromUrl = (url) => {
+  if (!url) return null;
+  try {
+    // URL format: https://storage.googleapis.com/bucket-name/folder/filename
+    const urlParts = url.split("/");
+    const bucketIndex = urlParts.findIndex((part) => part === bucketName);
+    if (bucketIndex !== -1 && bucketIndex < urlParts.length - 1) {
+      return urlParts.slice(bucketIndex + 1).join("/");
+    }
+    return null;
+  } catch (error) {
+    console.error("Error extracting filename from URL:", error);
+    return null;
+  }
+};
+
+// Helper function to delete file from GCS
+const deleteFileFromGCS = async (fileName) => {
+  try {
+    if (fileName) {
+      const bucket = storage.bucket(bucketName);
+      const file = bucket.file(fileName);
+
+      // Check if file exists before attempting to delete
+      const [exists] = await file.exists();
+      if (exists) {
+        await file.delete();
+        console.log(`File ${fileName} deleted from GCS`);
+      } else {
+        console.log(`File ${fileName} not found in GCS, skipping deletion`);
+      }
+    }
+  } catch (error) {
+    if (error.code === 404) {
+      console.log(`File ${fileName} not found in GCS, skipping deletion`);
+    } else {
+      console.error(`Error deleting file ${fileName} from GCS:`, error);
+    }
+  }
+};
+
+// Function to delete multiple files from GCS using URLs
+const deleteFilesFromGCSByUrls = async (urls) => {
+  try {
+    const deletePromises = urls
+      .filter((url) => url) // Filter out null/undefined URLs
+      .map((url) => {
+        const fileName = extractFilenameFromUrl(url);
+        return deleteFileFromGCS(fileName);
+      });
+
+    await Promise.all(deletePromises);
+  } catch (error) {
+    console.error("Error deleting files from GCS:", error);
+    throw error;
+  }
+};
+
 // Middleware to handle multiple file uploads
 const uploadFiles = upload.fields([
   { name: "image", maxCount: 1 },
   { name: "lampiran", maxCount: 1 },
 ]);
 
-export { uploadFiles, uploadFileToGCS };
+export {
+  uploadFiles,
+  uploadFileToGCS,
+  deleteFileFromGCS,
+  deleteFilesFromGCSByUrls,
+  extractFilenameFromUrl,
+};

@@ -3,7 +3,10 @@ import ReportCategory from "../models/reportCategory.model.js";
 import ReportHistory from "../models/reportHistory.model.js";
 import GovernmentAgency from "../models/governmentAgency.model.js";
 import { Op } from "sequelize";
-import { uploadFileToGCS } from "../middleware/UploadFile.js";
+import {
+  uploadFileToGCS,
+  deleteFilesFromGCSByUrls,
+} from "../middleware/UploadFile.js";
 
 export const getReports = async (req, res) => {
   try {
@@ -153,14 +156,30 @@ export const updateReport = async (req, res) => {
 
 export const deleteReport = async (req, res) => {
   try {
+    // First, get the report to access file URLs
+    const report = await Report.findByPk(req.params.id);
+
+    if (!report) {
+      return res.status(404).json({ msg: "Report tidak ditemukan" });
+    }
+
+    // Delete files from GCS bucket using the URLs
+    const filesToDelete = [report.image_url, report.lampiran_url];
+    await deleteFilesFromGCSByUrls(filesToDelete);
+
+    // Delete the report from database
     await Report.destroy({
       where: {
         id: req.params.id,
       },
     });
-    res.status(200).json({ msg: "Report berhasil di hapus" });
+
+    res
+      .status(200)
+      .json({ msg: "Report berhasil dihapus beserta file terkait" });
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ msg: "Terjadi kesalahan saat menghapus report" });
   }
 };
 

@@ -1,0 +1,40 @@
+steps:
+  # Ngambil data env yg disimpen di cloud storage pake gsuri
+  - name: "gcr.io/cloud-builders/gsutil"
+    args: ["cp", "${_ENV}", "backend/.env"]
+
+  - name: "gcr.io/cloud-builders/gsutil"
+    args: ["cp", "${_SERVICE_KEY}", "backend/.service_key.json"]
+
+  # 1. Build Docker image untuk backend
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/laporin-be", "."]
+    dir: "backend"
+
+  # 2. Push ke Container Registry / Artifact Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/laporin-be"]
+
+  # 3. Deploy ke Cloud Run
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: gcloud
+    args:
+      [
+        "run",
+        "deploy",
+        "laporin-be",
+        "--image",
+        "gcr.io/$PROJECT_ID/laporin-be",
+        "--timeout",
+        "1000s",
+        "--port",
+        "5000",
+        "--region",
+        "us-central1",
+        "--allow-unauthenticated",
+      ]
+
+# Log hanya akan disimpan di Google Cloud Logging
+# Log tidak akan disimpan di Google Cloud Storage (butuh hak akses).
+options:
+  logging: CLOUD_LOGGING_ONLY
