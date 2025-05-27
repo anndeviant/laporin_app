@@ -40,7 +40,7 @@ const router = express.Router();
 // Admin Authentication Routes
 router.post("/register", registerAdmin); // Mendaftarkan admin baru
 router.post("/login", loginAdmin); // Login admin
-router.post("/logout", logoutAdmin); // Logout admin
+router.delete("/logout", logoutAdmin); // Logout admin
 router.get("/token", refreshAccessToken); // Refresh token menggunakan middleware
 
 // Admin Profile Routes
