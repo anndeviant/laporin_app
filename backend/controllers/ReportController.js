@@ -3,32 +3,10 @@ import ReportCategory from "../models/reportCategory.model.js";
 import ReportHistory from "../models/reportHistory.model.js";
 import GovernmentAgency from "../models/governmentAgency.model.js";
 import { Op } from "sequelize";
-import { uploadFileToGCS } from "../middleware/UploadFile.js";
-import { Storage } from "@google-cloud/storage";
-import dotenv from "dotenv";
-dotenv.config();
-
-const storage = new Storage();
-const bucketName = process.env.BUCKET_NAME;
-
-// Helper function to extract filename from GCS URL
-const extractFilenameFromUrl = (url) => {
-  if (!url) return null;
-  const parts = url.split("/");
-  return parts[parts.length - 1];
-};
-
-// Helper function to delete file from GCS
-const deleteFileFromGCS = async (fileName) => {
-  try {
-    if (fileName) {
-      await storage.bucket(bucketName).file(fileName).delete();
-      console.log(`File ${fileName} deleted from GCS`);
-    }
-  } catch (error) {
-    console.error(`Error deleting file ${fileName} from GCS:`, error);
-  }
-};
+import {
+  uploadFileToGCS,
+  deleteFilesFromGCSByUrls,
+} from "../middleware/UploadFile.js";
 
 export const getReports = async (req, res) => {
   try {
@@ -185,15 +163,9 @@ export const deleteReport = async (req, res) => {
       return res.status(404).json({ msg: "Report tidak ditemukan" });
     }
 
-    // Extract filenames from URLs and delete from GCS
-    const imageFileName = extractFilenameFromUrl(report.image_url);
-    const lampiranFileName = extractFilenameFromUrl(report.lampiran_url);
-
-    // Delete files from GCS bucket
-    await Promise.all([
-      deleteFileFromGCS(imageFileName),
-      deleteFileFromGCS(lampiranFileName),
-    ]);
+    // Delete files from GCS bucket using the URLs
+    const filesToDelete = [report.image_url, report.lampiran_url];
+    await deleteFilesFromGCSByUrls(filesToDelete);
 
     // Delete the report from database
     await Report.destroy({
