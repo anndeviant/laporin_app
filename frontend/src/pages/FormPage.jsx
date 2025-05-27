@@ -5,7 +5,6 @@ import ImageUpload from "../components/Form/ImageUpload";
 import InputField from "../components/Form/InputField";
 import SelectField from "../components/Form/SelectField";
 import TextArea from "../components/Form/TextArea";
-// import bgImage from "../assets/svg/Clippathgroup.svg";
 import { BASE_URL } from "../utils";
 import logo from "../assets/images/laporinlogo.png"; // Ganti dengan path logo yang sesuai
 
@@ -18,6 +17,7 @@ const FormPage = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [lampiranFile, setLampiranFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     category_id: "1",
@@ -64,11 +64,61 @@ const FormPage = () => {
     }
   };
 
+  // Notification component
+  const Notification = ({ type, message, onClose }) => (
+    <div className={`fixed top-20 right-4 z-50 max-w-sm w-full transform transition-all duration-500 ease-in-out ${notification ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
+      }`}>
+      <div className={`rounded-lg shadow-lg p-4 border-l-4 ${type === 'success'
+        ? 'bg-green-50 border-green-400 text-green-800'
+        : 'bg-red-50 border-red-400 text-red-800'
+        }`}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              {type === 'success' ? (
+                <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              ) : (
+                <svg className="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              )}
+            </div>
+            <div className="ml-3">
+              <p className="text-sm font-medium">{message}</p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className={`flex-shrink-0 ml-4 inline-flex text-sm ${type === 'success' ? 'text-green-500 hover:text-green-600' : 'text-red-500 hover:text-red-600'
+              }`}
+          >
+            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const showNotification = (type, message) => {
+    setNotification({ type, message });
+    setTimeout(() => {
+      setNotification(null);
+    }, 2000); // Auto dismiss after 5 seconds
+  };
+
+  const closeNotification = () => {
+    setNotification(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!imageFile) {
-      alert("Mohon unggah gambar sebagai bukti pendukung.");
+      showNotification('error', 'Mohon unggah gambar sebagai bukti pendukung.');
       return;
     }
 
@@ -83,7 +133,7 @@ const FormPage = () => {
     setLoading(true);
     try {
       await axios.post(`${BASE_URL}/public/reports`, data);
-      alert("Aduan berhasil dikirim!");
+      showNotification('success', 'Aduan berhasil dikirim!');
       // Reset form jika perlu
       setFormData({
         title: "",
@@ -100,9 +150,9 @@ const FormPage = () => {
     } catch (error) {
       console.error("Gagal mengirim aduan:");
       if (error.response) {
-        alert(`Gagal: ${error.response.data.message || "Terjadi kesalahan"}`);
+        showNotification('error', `Gagal: ${error.response.data.message || "Terjadi kesalahan"}`);
       } else {
-        alert("Tidak dapat terhubung ke server.");
+        showNotification('error', 'Tidak dapat terhubung ke server.');
       }
     } finally {
       setLoading(false);
@@ -126,6 +176,15 @@ const FormPage = () => {
 
   return (
     <div>
+      {/* Notification */}
+      {notification && (
+        <Notification
+          type={notification.type}
+          message={notification.message}
+          onClose={closeNotification}
+        />
+      )}
+
       {/* Modern Navbar */}
       <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-white/20 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
