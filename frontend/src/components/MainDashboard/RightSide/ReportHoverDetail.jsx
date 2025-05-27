@@ -1,4 +1,21 @@
+import { useState, useEffect } from 'react';
+
 const ReportHoverDetail = ({ report }) => {
+  const [showAbove, setShowAbove] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const viewportHeight = window.innerHeight;
+      setShowAbove(e.clientY > viewportHeight / 2);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
   const statusColors = {
     pending: "bg-gray-400",
     verified: "bg-blue-600",
@@ -9,7 +26,9 @@ const ReportHoverDetail = ({ report }) => {
 
   return (
     <span
-      className="hidden group-hover:block ml-4  w-full max-w-lg absolute mb-10 bottom-0 border shadow-lg p-6 bg-white rounded-md z-50 text-gray-900"
+      className={`hidden group-hover:block ml-4 w-full max-w-lg absolute
+                ${showAbove ? 'bottom-full mb-2' : 'top-full mt-2'} 
+                border shadow-lg p-6 bg-white rounded-md z-50 text-gray-900`}
     >
       <article>
         <header>
