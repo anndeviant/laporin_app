@@ -54,7 +54,8 @@ const CategoryPage = () => {
         }
     };
 
-    const handleAddCategory = async () => {
+    const handleAddCategory = async (e) => {
+        e.preventDefault();
         try {
             await axiosInstance.post(`${BASE_URL}/admin/categories`, {
                 name: newCategory,
