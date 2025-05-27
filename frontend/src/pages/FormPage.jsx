@@ -197,8 +197,8 @@ const FormPage = () => {
 
             {/* Section 1: Informasi Aduan */}
             <div className="bg-gray-50 p-8 rounded-lg border-l-4 border-blue-500">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
-                <span className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold mr-4">1</span>
+              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <span className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-3">1</span>
                 Informasi Aduan
               </h2>
               <div className="grid grid-cols-1 gap-4">
