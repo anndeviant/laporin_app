@@ -2,10 +2,12 @@ import { useState } from "react";
 import Table from "./Table";
 import InputField from "../Form/InputField";
 import SelectField from "../Form/SelectField";
+import ConfirmDeleteModal from "../Modal/ConfirmDeleteModal";
 
 const TableGovernmentAgency = ({ agencies, onEdit, onDelete }) => {
   const [editRowId, setEditRowId] = useState(null);
   const [editData, setEditData] = useState({});
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, agency: null });
 
   const startEdit = (agency) => {
     setEditRowId(agency.id);
@@ -35,6 +37,21 @@ const TableGovernmentAgency = ({ agencies, onEdit, onDelete }) => {
 
   const handleChange = (field, value) => {
     setEditData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleDeleteClick = (agency) => {
+    setDeleteModal({ isOpen: true, agency });
+  };
+
+  const handleDeleteConfirm = () => {
+    if (onDelete && deleteModal.agency) {
+      onDelete(deleteModal.agency.id);
+    }
+    setDeleteModal({ isOpen: false, agency: null });
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModal({ isOpen: false, agency: null });
   };
 
   const columns = [
@@ -150,7 +167,7 @@ const TableGovernmentAgency = ({ agencies, onEdit, onDelete }) => {
               Edit
             </button>
             <button
-              onClick={() => onDelete?.(agency.id)}
+              onClick={() => handleDeleteClick(agency)}
               className="text-red-600 hover:underline text-sm"
             >
               Delete
@@ -160,7 +177,18 @@ const TableGovernmentAgency = ({ agencies, onEdit, onDelete }) => {
     },
   ];
 
-  return <Table data={agencies} columns={columns} />;
+  return (
+    <>
+      <Table data={agencies} columns={columns} />
+      <ConfirmDeleteModal
+        isOpen={deleteModal.isOpen}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        title="Hapus Instansi Pemerintah"
+        message={`Apakah Anda yakin ingin menghapus instansi "${deleteModal.agency?.name}"? Tindakan ini tidak dapat dibatalkan.`}
+      />
+    </>
+  );
 };
 
 export default TableGovernmentAgency;
