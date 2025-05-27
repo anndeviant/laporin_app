@@ -79,7 +79,9 @@ export const createReports = async (req, res) => {
       imageUrl = await uploadFileToGCS(req.files.image[0], "images");
     } catch (error) {
       console.error("Error uploading image:", error);
-      return res.status(500).json({ msg: "Gagal mengunggah foto bukti" });
+      return res
+        .status(500)
+        .json({ msg: `Gagal mengunggah foto bukti ${error}` });
     }
 
     // Upload lampiran file if exists
