@@ -5,6 +5,7 @@ import {
     CheckCircle,
     Clock,
     AlertCircle,
+    XCircle,
     Phone,
     Mail,
     MapPin,
@@ -78,12 +79,12 @@ const HelpPage = () => {
         }
     ];
 
-    const statusColors = {
-        "Pending": "bg-gray-200 text-gray-800",
-        "Verified": "bg-blue-100 text-blue-800",
-        "In Progress": "bg-yellow-100 text-black-800",
-        "Resolved": "bg-green-100 text-green-800",
-        "Rejected": "bg-red-100 text-red-800"
+    const statusConfig = {
+        pending: { label: "Menunggu Verifikasi", color: "bg-gray-200 text-gray-800", icon: Clock },
+        verified: { label: "Terverifikasi", color: "bg-blue-100 text-blue-800", icon: CheckCircle },
+        in_progress: { label: "Sedang Diproses", color: "bg-yellow-100 text-yellow-800", icon: AlertCircle },
+        resolved: { label: "Selesai", color: "bg-green-100 text-green-800", icon: CheckCircle },
+        rejected: { label: "Ditolak", color: "bg-red-100 text-red-800", icon: XCircle }
     };
 
     const toggleFaq = (id) => {
@@ -98,6 +99,11 @@ const HelpPage = () => {
     const handleLaporClick = () => {
         setActiveNavItem('lapor');
         navigate('/form');
+    };
+
+    const handleTrackingClick = () => {
+        setActiveNavItem('tracking');
+        navigate('/tracking');
     };
 
     return (
@@ -137,6 +143,15 @@ const HelpPage = () => {
                                     }`}
                             >
                                 Lapor
+                            </button>
+                            <button
+                                onClick={handleTrackingClick}
+                                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeNavItem === 'tracking'
+                                    ? 'text-blue-600 bg-blue-50'
+                                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                                    }`}
+                            >
+                                Lacak Laporan
                             </button>
                             <button
                                 onClick={() => setActiveNavItem('bantuan')}
@@ -211,32 +226,34 @@ const HelpPage = () => {
                     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-                                Status Laporan
+                                Informasi Status Laporan
                             </h2>
                             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                                Pahami arti dari setiap status laporan yang Anda kirimkan untuk memantau progress penanganan
+                                Pahami arti dari setiap status untuk memantau progress penanganan laporan Anda
                             </p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {Object.entries({
-                                "Pending": "Laporan sedang menunggu verifikasi dari tim kami",
-                                "Verified": "Laporan telah diverifikasi dan diteruskan ke instansi terkait",
-                                "In Progress": "Instansi terkait sedang menangani masalah yang dilaporkan",
-                                "Resolved": "Masalah telah selesai ditangani",
-                                "Rejected": "Laporan ditolak karena tidak memenuhi kriteria"
-                            }).map(([status, description]) => (
-                                <div key={status} className="bg-white rounded-lg shadow-md p-8">
-                                    <div className="flex items-center mb-4">
-                                        <span className={`px-4 py-2 rounded-full text-base font-medium ${statusColors[status]}`}>
-                                            {status}
-                                        </span>
+                            {Object.entries(statusConfig).map(([status, config]) => {
+                                const Icon = config.icon;
+                                return (
+                                    <div key={status} className="bg-white rounded-lg shadow-md p-8">
+                                        <div className="flex items-center mb-4">
+                                            <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${config.color}`}>
+                                                <Icon className="w-4 h-4 mr-1" />
+                                                {config.label}
+                                            </div>
+                                        </div>
+                                        <p className="text-gray-600 text-base leading-relaxed">
+                                            {status === 'pending' && 'Laporan Anda sedang menunggu verifikasi dari tim kami'}
+                                            {status === 'verified' && 'Laporan telah diverifikasi dan diteruskan ke instansi terkait'}
+                                            {status === 'in_progress' && 'Instansi terkait sedang menangani masalah yang dilaporkan'}
+                                            {status === 'resolved' && 'Masalah telah selesai ditangani oleh instansi terkait'}
+                                            {status === 'rejected' && 'Laporan ditolak karena tidak memenuhi kriteria'}
+                                        </p>
                                     </div>
-                                    <p className="text-gray-600 text-base leading-relaxed">
-                                        {description}
-                                    </p>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 </section>
