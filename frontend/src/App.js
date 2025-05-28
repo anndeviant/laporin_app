@@ -8,6 +8,7 @@ import CategoryPage from "./pages/CategoryPage";
 import LoginRegisterForm from "./pages/LoginRegisterForm";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import TrackingPage from "./pages/TrackingPage";
+import AdminProfilePage from "./pages/AdminProfilePage.jsx";
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
         <Route path="/tracking" element={<TrackingPage />} />
         <Route path="/admin" element={<LoginRegisterForm />} />
         <Route
-          path="/admin/home"
+          path="/admin/dashboard"
           element={
             <ProtectedRoute>
               <DashboardPage />
@@ -39,6 +40,14 @@ function App() {
           element={
             <ProtectedRoute>
               <CategoryPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/profile"
+          element={
+            <ProtectedRoute>
+              <AdminProfilePage />
             </ProtectedRoute>
           }
         />
