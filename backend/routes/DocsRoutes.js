@@ -112,6 +112,36 @@ router.get("/", (req, res) => {
                         </h2>
                         <p>Laporin API menyediakan endpoints untuk mengelola laporan kerusakan infrastruktur. API ini mendukung operasi untuk masyarakat umum (pelapor) dan admin (pengelola).</p>
                         
+                        <!-- API Count Summary -->
+                        <div class="alert alert-primary">
+                            <h5><i class="fas fa-calculator"></i> Total API Endpoints: <strong>22</strong></h5>
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <h6>Public Endpoints: <span class="badge bg-success">4</span></h6>
+                                    <ul class="mb-0">
+                                        <li>GET /public/reports (1)</li>
+                                        <li>POST /public/reports (1)</li>
+                                        <li>GET /public/reports/track/:trackingId (1)</li>
+                                        <li>GET /public/categories (1)</li>
+                                        <li>GET /public/agencies (1)</li>
+                                    </ul>
+                                    <small class="text-muted">Subtotal: 5 endpoints</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Admin Endpoints: <span class="badge bg-warning">17</span></h6>
+                                    <ul class="mb-2">
+                                        <li><strong>Auth:</strong> 4 endpoints</li>
+                                        <li><strong>Profile:</strong> 2 endpoints</li>
+                                        <li><strong>Admin Users:</strong> 2 endpoints</li>
+                                        <li><strong>Reports:</strong> 4 endpoints</li>
+                                        <li><strong>Categories:</strong> 4 endpoints</li>
+                                        <li><strong>Agencies:</strong> 4 endpoints</li>
+                                    </ul>
+                                    <small class="text-muted">Subtotal: 17 endpoints</small>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <h4>Fitur Utama:</h4>
                         <ul>
                             <li>Pelaporan kerusakan infrastruktur oleh masyarakat</li>
