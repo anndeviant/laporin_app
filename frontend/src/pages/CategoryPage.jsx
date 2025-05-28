@@ -12,6 +12,7 @@ const CategoryPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [isAdding, setIsAdding] = useState(false);
     const [newCategory, setNewCategory] = useState("");
+    const [loading, setLoading] = useState(true);
     const perPage = 10;
 
     const totalPages = Math.ceil(category.length / perPage);
@@ -29,8 +30,10 @@ const CategoryPage = () => {
         try {
             const response = await axiosInstance.get(`${BASE_URL}/admin/categories`);
             setCategory(response.data);
+            setLoading(false);
         } catch (error) {
             console.error("Gagal memuat kategori:");
+            setLoading(false);
         }
     };
 
@@ -72,6 +75,25 @@ const CategoryPage = () => {
     const handleNewChange = (e) => {
         setNewCategory(e.target.value);
     };
+
+    if (loading) {
+        return (
+            <div className="h-screen w-full flex overflow-auto antialiased text-gray-800 bg-white">
+                <Sidebar activeItem="category" />
+                <div className="flex-1 flex flex-col">
+                    <TopBar />
+                    <header className="flex-none flex h-16 bg-gray-100 border-t px-4 items-center">
+                        <h1 className="font-semibold text-lg">Category</h1>
+                    </header>
+
+                    {/* Loading Spinner - matching AdminProfilePage style */}
+                    <div className="flex items-center justify-center h-full">
+                        <div className="w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="h-screen w-full flex overflow-auto antialiased text-gray-800 bg-white">

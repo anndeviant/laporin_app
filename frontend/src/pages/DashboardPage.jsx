@@ -8,6 +8,7 @@ import axiosInstance from "../utils/axiosInstance";
 const DashboardPage = () => {
     const [reports, setReport] = useState([]);
     const [statusSummary, setStatusSummary] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         getReports();
@@ -18,6 +19,7 @@ const DashboardPage = () => {
         setReport(response.data);
         const summary = calculateStatusCounts(response.data);
         setStatusSummary(summary);
+        setLoading(false);
     }
 
     const handleUpdate = async (updatedReport) => {
@@ -82,23 +84,36 @@ const DashboardPage = () => {
 
         return { statusCountsToday, statusCountsWeek };
     };
-    if (!statusSummary) return (
-        <div className="flex items-center justify-center h-screen">
-            <div className="w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
-        </div>
-    );
-    else return (
+    if (loading) {
+        return (
+            <div className="h-screen w-full flex overflow-auto antialiased text-gray-800 bg-white">
+                <Sidebar activeItem="dashboard" />
+                <div className="flex-1 flex flex-col">
+                    <TopBar />
+                    <header className="flex-none flex h-16 bg-gray-100 border-t px-4 items-center">
+                        <h1 className="font-semibold text-lg">Dashboard</h1>
+                    </header>
+
+                    {/* Loading Spinner - matching AdminProfilePage style */}
+                    <div className="flex items-center justify-center h-full">
+                        <div className="w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return (
         <div className="h-screen w-full flex overflow-auto antialiased text-gray-800 bg-white">
-            <Sidebar activeItem={"home"} />
-            <div className="flex-1 flex flex-col" >
+            <Sidebar activeItem={"dashboard"} />
+            <div className="flex-1 flex flex-col">
                 <TopBar />
-                <header aria-label="page caption" className=" flex-none flex h-16 bg-gray-100 border-t px-4 items-center">
+                <header aria-label="page caption" className="flex-none flex h-16 bg-gray-100 border-t px-4 items-center">
                     <h1 id="page-caption" className="font-semibold text-lg">Dashboard</h1>
                 </header>
                 <MainDashboard onDeleteReport={handleDelete} onUpdateReport={handleUpdate} reports={reports} statusCountsToday={statusSummary.statusCountsToday} statusCountsWeek={statusSummary.statusCountsWeek} />
             </div>
         </div>
-
     )
 }
 

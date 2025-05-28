@@ -53,7 +53,7 @@ const LoginRegisterForm = () => {
 
         // Redirect otomatis setelah 1.5 detik
         setTimeout(() => {
-          navigate("/admin/home");
+          navigate("/admin/dashboard");
         }, 1500);
       } catch (error) {
         console.error("Login Error:", error.response?.data || error.message);
