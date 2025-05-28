@@ -1,34 +1,12 @@
-# Node.js
 node_modules/
-npm-debug.log
-yarn-error.log
 
 # Logs
 logs/
-*.log
-*.log.*
-
-# Dependency directories
-jspm_packages/
-bower_components/
-
-# Build directories
-dist/
-build/
 
 # Environment variables
 .env
 
-# IDEs and editors
+# IDEs
 .vscode/
-.idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-
-# OS generated files
-.DS_Store
-Thumbs.db
 
 service_key.json
