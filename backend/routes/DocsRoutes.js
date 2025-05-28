@@ -77,7 +77,6 @@ router.get("/", (req, res) => {
                         <a class="nav-link ms-3" href="#public-agencies">Agencies</a>
                         <a class="nav-link" href="#admin-endpoints">Admin Endpoints</a>
                         <a class="nav-link ms-3" href="#admin-auth">Authentication</a>
-                        <a class="nav-link ms-3" href="#admin-profile">Profile Management</a>
                         <a class="nav-link ms-3" href="#admin-reports">Report Management</a>
                         <a class="nav-link ms-3" href="#admin-categories">Category Management</a>
                         <a class="nav-link ms-3" href="#admin-agencies">Agency Management</a>
@@ -112,40 +111,11 @@ router.get("/", (req, res) => {
                         </h2>
                         <p>Laporin API menyediakan endpoints untuk mengelola laporan kerusakan infrastruktur. API ini mendukung operasi untuk masyarakat umum (pelapor) dan admin (pengelola).</p>
                         
-                        <!-- API Count Summary -->
-                        <div class="alert alert-primary">
-                            <h5><i class="fas fa-calculator"></i> Total API Endpoints: <strong>22</strong></h5>
-                            <div class="row mt-3">
-                                <div class="col-md-6">
-                                    <h6>Public Endpoints: <span class="badge bg-success">4</span></h6>
-                                    <ul class="mb-0">
-                                        <li>GET /public/reports (1)</li>
-                                        <li>POST /public/reports (1)</li>
-                                        <li>GET /public/reports/track/:trackingId (1)</li>
-                                        <li>GET /public/categories (1)</li>
-                                        <li>GET /public/agencies (1)</li>
-                                    </ul>
-                                    <small class="text-muted">Subtotal: 5 endpoints</small>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6>Admin Endpoints: <span class="badge bg-warning">17</span></h6>
-                                    <ul class="mb-2">
-                                        <li><strong>Auth:</strong> 4 endpoints</li>
-                                        <li><strong>Profile:</strong> 2 endpoints</li>
-                                        <li><strong>Admin Users:</strong> 2 endpoints</li>
-                                        <li><strong>Reports:</strong> 4 endpoints</li>
-                                        <li><strong>Categories:</strong> 4 endpoints</li>
-                                        <li><strong>Agencies:</strong> 4 endpoints</li>
-                                    </ul>
-                                    <small class="text-muted">Subtotal: 17 endpoints</small>
-                                </div>
-                            </div>
-                        </div>
-                        
                         <h4>Fitur Utama:</h4>
                         <ul>
                             <li>Pelaporan kerusakan infrastruktur oleh masyarakat</li>
                             <li>Verifikasi dan pengelolaan laporan oleh admin</li>
+                            <li>Penugasan laporan ke instansi terkait</li>
                             <li>Pelacakan status laporan</li>
                             <li>Manajemen kategori dan instansi</li>
                         </ul>
@@ -202,6 +172,17 @@ Response: [
                                 </div>
                             </div>
 
+                            <!-- Get Report by ID -->
+                            <div class="card endpoint-card method-get">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-success method-badge me-2">GET</span>
+                                        <code>/public/reports/:id</code>
+                                    </div>
+                                    <p class="mb-2">Melihat detail laporan spesifik</p>
+                                </div>
+                            </div>
+
                             <!-- Create Report -->
                             <div class="card endpoint-card method-post">
                                 <div class="card-body">
@@ -235,6 +216,39 @@ Response: [
                                         <code>/public/reports/track/:trackingId</code>
                                     </div>
                                     <p class="mb-2">Melacak status laporan dengan ID pelacakan</p>
+                                </div>
+                            </div>
+
+                            <!-- Get Reports by Category -->
+                            <div class="card endpoint-card method-get">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-success method-badge me-2">GET</span>
+                                        <code>/public/reports/category/:categoryId</code>
+                                    </div>
+                                    <p class="mb-2">Mendapatkan laporan berdasarkan kategori</p>
+                                </div>
+                            </div>
+
+                            <!-- Get Reports by Status -->
+                            <div class="card endpoint-card method-get">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-success method-badge me-2">GET</span>
+                                        <code>/public/reports/status/:status</code>
+                                    </div>
+                                    <p class="mb-2">Melihat laporan berdasarkan status (pending, verified, in_progress, resolved, rejected)</p>
+                                </div>
+                            </div>
+
+                            <!-- Get Statistics -->
+                            <div class="card endpoint-card method-get">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-success method-badge me-2">GET</span>
+                                        <code>/public/statistics</code>
+                                    </div>
+                                    <p class="mb-2">Mendapatkan statistik laporan (jumlah per kategori/status)</p>
                                 </div>
                             </div>
                         </div>
@@ -320,7 +334,7 @@ Response: [
                             </div>
 
                             <!-- Logout -->
-                            <div class="card endpoint-card method-delete">
+                            <div class="card endpoint-card method-post">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center mb-2">
                                         <span class="badge bg-danger method-badge me-2">DELETE</span>
@@ -342,103 +356,83 @@ Response: [
                             </div>
                         </div>
 
-                        <!-- Admin Profile -->
-                        <div id="admin-profile" class="mt-4">
-                            <h4 class="text-secondary mb-3">Profile Management</h4>
-                            
-                            <!-- Get Profile -->
-                            <div class="card endpoint-card method-get">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <span class="badge bg-success method-badge me-2">GET</span>
-                                        <code>/admin/profile</code>
-                                    </div>
-                                    <p class="mb-2">Mendapatkan profil admin</p>
-                                </div>
-                            </div>
-
-                            <!-- Update Profile -->
-                            <div class="card endpoint-card method-patch">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <span class="badge bg-warning method-badge me-2">PATCH</span>
-                                        <code>/admin/profile</code>
-                                    </div>
-                                    <p class="mb-2">Mengupdate profil admin</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Admin User Management -->
-                        <div id="admin-users" class="mt-4">
-                            <h4 class="text-secondary mb-3">Admin Management</h4>
-                            
-                            <div class="card endpoint-card method-get">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <span class="badge bg-success method-badge me-2">GET</span>
-                                        <code>/admin/users/:id</code>
-                                    </div>
-                                    <p class="mb-2">Mendapatkan detail admin berdasarkan ID</p>
-                                </div>
-                            </div>
-
-                            <div class="card endpoint-card method-delete">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <span class="badge bg-danger method-badge me-2">DELETE</span>
-                                        <code>/admin/users/:id</code>
-                                    </div>
-                                    <p class="mb-2">Menghapus admin</p>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- Admin Reports -->
                         <div id="admin-reports" class="mt-4">
                             <h4 class="text-secondary mb-3">Report Management</h4>
                             
-                            <!-- Get Reports -->
-                            <div class="card endpoint-card method-get">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <span class="badge bg-success method-badge me-2">GET</span>
-                                        <code>/admin/reports</code>
-                                    </div>
-                                    <p class="mb-2">Mendapatkan semua laporan</p>
-                                </div>
-                            </div>
-
-                            <!-- Get Report by ID -->
-                            <div class="card endpoint-card method-get">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <span class="badge bg-success method-badge me-2">GET</span>
-                                        <code>/admin/reports/:id</code>
-                                    </div>
-                                    <p class="mb-2">Mendapatkan detail laporan spesifik</p>
-                                </div>
-                            </div>
-
-                            <!-- Update Report -->
+                            <!-- Verify Report -->
                             <div class="card endpoint-card method-patch">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center mb-2">
                                         <span class="badge bg-warning method-badge me-2">PATCH</span>
-                                        <code>/admin/reports/:id</code>
+                                        <code>/admin/reports/:id/verify</code>
                                     </div>
-                                    <p class="mb-2">Memperbarui laporan</p>
+                                    <p class="mb-2">Memverifikasi laporan</p>
+                                    <div class="code-block">
+{
+  "note": "string (optional)"
+}
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Delete Report -->
-                            <div class="card endpoint-card method-delete">
+                            <!-- Assign Report -->
+                            <div class="card endpoint-card method-patch">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center mb-2">
-                                        <span class="badge bg-danger method-badge me-2">DELETE</span>
-                                        <code>/admin/reports/:id</code>
+                                        <span class="badge bg-warning method-badge me-2">PATCH</span>
+                                        <code>/admin/reports/:id/assign</code>
                                     </div>
-                                    <p class="mb-2">Menghapus laporan</p>
+                                    <p class="mb-2">Menugaskan laporan ke instansi</p>
+                                    <div class="code-block">
+{
+  "agency_id": "integer (required)",
+  "note": "string (optional)"
+}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Resolve Report -->
+                            <div class="card endpoint-card method-patch">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-warning method-badge me-2">PATCH</span>
+                                        <code>/admin/reports/:id/resolve</code>
+                                    </div>
+                                    <p class="mb-2">Menyelesaikan laporan</p>
+                                    <div class="code-block">
+{
+  "note": "string (optional)"
+}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reject Report -->
+                            <div class="card endpoint-card method-patch">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-warning method-badge me-2">PATCH</span>
+                                        <code>/admin/reports/:id/reject</code>
+                                    </div>
+                                    <p class="mb-2">Menolak laporan</p>
+                                    <div class="code-block">
+{
+  "note": "string (required)"
+}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Get Report History -->
+                            <div class="card endpoint-card method-get">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-success method-badge me-2">GET</span>
+                                        <code>/admin/reports/:id/history</code>
+                                    </div>
+                                    <p class="mb-2">Mendapatkan riwayat perubahan laporan</p>
                                 </div>
                             </div>
                         </div>
@@ -447,18 +441,6 @@ Response: [
                         <div id="admin-categories" class="mt-4">
                             <h4 class="text-secondary mb-3">Category Management</h4>
                             
-                            <!-- Get Categories -->
-                            <div class="card endpoint-card method-get">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <span class="badge bg-success method-badge me-2">GET</span>
-                                        <code>/admin/categories</code>
-                                    </div>
-                                    <p class="mb-2">Mendapatkan semua kategori</p>
-                                </div>
-                            </div>
-
-                            <!-- Create Category -->
                             <div class="card endpoint-card method-post">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center mb-2">
@@ -469,7 +451,6 @@ Response: [
                                 </div>
                             </div>
 
-                            <!-- Update Category -->
                             <div class="card endpoint-card method-patch">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center mb-2">
@@ -480,7 +461,6 @@ Response: [
                                 </div>
                             </div>
 
-                            <!-- Delete Category -->
                             <div class="card endpoint-card method-delete">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center mb-2">
@@ -496,18 +476,6 @@ Response: [
                         <div id="admin-agencies" class="mt-4">
                             <h4 class="text-secondary mb-3">Agency Management</h4>
                             
-                            <!-- Get Agencies -->
-                            <div class="card endpoint-card method-get">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <span class="badge bg-success method-badge me-2">GET</span>
-                                        <code>/admin/agencies</code>
-                                    </div>
-                                    <p class="mb-2">Mendapatkan semua instansi</p>
-                                </div>
-                            </div>
-
-                            <!-- Create Agency -->
                             <div class="card endpoint-card method-post">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center mb-2">
@@ -518,7 +486,6 @@ Response: [
                                 </div>
                             </div>
 
-                            <!-- Update Agency -->
                             <div class="card endpoint-card method-patch">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center mb-2">
@@ -529,7 +496,6 @@ Response: [
                                 </div>
                             </div>
 
-                            <!-- Delete Agency -->
                             <div class="card endpoint-card method-delete">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center mb-2">
@@ -537,6 +503,31 @@ Response: [
                                         <code>/admin/agencies/:id</code>
                                     </div>
                                     <p class="mb-2">Menghapus instansi</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Admin Users -->
+                        <div id="admin-users" class="mt-4">
+                            <h4 class="text-secondary mb-3">Admin Management</h4>
+                            
+                            <div class="card endpoint-card method-get">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-success method-badge me-2">GET</span>
+                                        <code>/admin/users</code>
+                                    </div>
+                                    <p class="mb-2">Mendapatkan daftar admin</p>
+                                </div>
+                            </div>
+
+                            <div class="card endpoint-card method-delete">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-danger method-badge me-2">DELETE</span>
+                                        <code>/admin/users/:id</code>
+                                    </div>
+                                    <p class="mb-2">Menghapus admin</p>
                                 </div>
                             </div>
                         </div>
