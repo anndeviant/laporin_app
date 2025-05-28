@@ -1,4 +1,5 @@
 import Admin from "../models/admin.model.js";
+import Report from "../models/report.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -171,19 +172,25 @@ async function deleteAdmin(req, res) {
       error.statusCode = 404;
       throw error;
     }
+    const adminId = req.adminId; // dari token
 
-    // Prevent admin from deleting themselves
-    if (admin.id === req.adminId) {
-      const error = new Error("Tidak dapat menghapus akun sendiri");
-      error.statusCode = 400;
-      throw error;
-    }
+    // Reset all reports handled by this admin
+    await Report.update(
+      {
+        admin_id: null,
+        status: "pending",
+      },
+      {
+        where: { admin_id: adminId },
+      }
+    );
 
+    // Delete the admin
     await Admin.destroy({ where: { id: req.params.id } });
 
     res.status(200).json({
       status: "Success",
-      message: "Admin Berhasil Dihapus",
+      message: "Admin Berhasil Dihapus dan laporan terkait telah direset",
     });
   } catch (error) {
     console.log("Error deleting admin:", error);

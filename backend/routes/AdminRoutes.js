@@ -31,6 +31,7 @@ import {
   updateAdminProfile,
   getAdmins,
   deleteAdmin,
+  getAdminById,
 } from "../controllers/AdminController.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshAccessToken } from "../middleware/RefreshToken.js";
@@ -49,6 +50,7 @@ router.patch("/profile", verifyToken, updateAdminProfile); // Mengupdate profil 
 
 // Admin User Management Routes
 router.get("/users", verifyToken, getAdmins); // Mendapatkan daftar admin
+router.get("/users/:id", verifyToken, getAdminById); // Add this line
 router.delete("/users/:id", verifyToken, deleteAdmin); // Menghapus admin
 
 // Admin Report Routes (Dengan autentikasi)
